@@ -76,11 +76,11 @@ const Stores: React.FC = () => {
 
   useEffect(() => {
     handleGetMainCategories();
-  }, [objectTypeId]);
+  }, [objectTypeId, translateService.lang]);
 
   useEffect(() => {
     handleGetSubCategories();
-  }, [categoryArray.length]);
+  }, [categoryArray.length, translateService.lang]);
 
   useEffect(() => {
     if (merchants.length <= 0) {
@@ -103,13 +103,19 @@ const Stores: React.FC = () => {
     subCategoryArray.length,
     categoryArray.length,
     routeParams.params.routeId,
-    routeParams.params.id,
+    routeParams.params.id
   ]);
 
   useEffect(() => {
     setSectStep(0);
     setMerchants([]);
   }, [subCategoryArray.length, categoryArray.length]);
+
+  useEffect(() => {
+    setMerchants([]);
+    setSectStep(0);
+    handleGetMerchants();
+  }, [translateService.lang]);
 
   const handleGetMainCategories = () => {
     GetMainCategories([objectTypeId])
