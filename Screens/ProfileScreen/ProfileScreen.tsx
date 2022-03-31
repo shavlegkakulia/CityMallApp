@@ -396,7 +396,7 @@ useEffect(() => {
               />
             </TouchableOpacity>
           </View>
-          {state.clientInfo ? <StatusBar data={state.clientInfo} /> : null}
+          {cinfo ? <StatusBar data={cinfo} /> : null}
         </View>
         <View style={{marginBottom: 20, alignItems: 'center'}}>
           <TouchableOpacity
