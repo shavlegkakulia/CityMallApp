@@ -111,7 +111,7 @@ const ProfileScreen = (props: any) => {
       rowCount,
       isDarkTheme ? 'dark' : 'light',
     )
-      .then(res => {
+      .then(res => {console.log('>>>', res.data.data)
         if (renew) {
           setClientPaymentTransactions(res.data.data!);
         } else {
@@ -133,7 +133,7 @@ const ProfileScreen = (props: any) => {
       })
       .catch(e => {
         setCanOperation(true);
-        setFetchingMore(false);
+        //setFetchingMore(false);
       });
   };
 
@@ -166,7 +166,7 @@ const ProfileScreen = (props: any) => {
       })
       .catch(e => {
         setCanOperation(true);
-        setFetchingMore(false);
+       // setFetchingMore(false);
       });
   };
 
@@ -247,6 +247,7 @@ const ProfileScreen = (props: any) => {
     getClientData();
     setRenewing(true);
     setRowIndex(1);
+    setStopFetching(false);
     if (isMoneyTransaction) {
       getClientPayTransactions(true);
     } else {
@@ -271,7 +272,7 @@ const ProfileScreen = (props: any) => {
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     if (stopFetching) return;
-    const paddingToBottom = 20;
+    const paddingToBottom = 5;
     const isChunk =
       event.nativeEvent.layoutMeasurement.height +
         event.nativeEvent.contentOffset.y >=

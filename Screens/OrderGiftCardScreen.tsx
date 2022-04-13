@@ -10,6 +10,7 @@ import {
   View,
   BackHandler,
   Platform,
+  Alert,
 } from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {AppContext} from '../AppContext/AppContext';
@@ -42,13 +43,12 @@ const OrderGiftCardScreen = () => {
   const [errorMessages, setErrorMesages] = useState<string[] | []>([]);
   const [step, setStep] = useState<number>(0);
   const [btnLoading, setBtnLoading] = useState<boolean>(false);
-  const [customer, setCustomer] = useState<string>('');
+  const [customer, setCustomer] = useState<string | undefined>();
   const [customerError, setCustomerError] = useState<string>('');
-  const [phoneNumber, setPhoneNumber] = useState<string>('');
-  const [phoneNumberError, setPhoneNumberError] = useState<string>('');
-  const [orderDetails, setOrderDetails] = useState<string>('');
+  const [phoneNumber, setPhoneNumber] = useState<string | undefined>();
+  const [orderDetails, setOrderDetails] = useState<string | undefined>();
   const [orderDetailsError, setOrderDetailsError] = useState<string>('');
-  const [address, setAddress] = useState<string>('');
+  const [address, setAddress] = useState<string | undefined>();
   const [addressError, setAddressError] = useState<string>('');
   const [deliveryOption, setDeliveryOption] = useState<IDeliveryOption>({
     fromCityMall: false,
@@ -58,6 +58,8 @@ const OrderGiftCardScreen = () => {
   const [checkedServiceCenter, setChekedServiceCenter] =
     useState<IServiceCenter>({id: 0, name: '', checked: false});
   const [resSuccess, setRespSuccess] = useState<boolean>(false);
+  const [nameError, setNameError] = useState<string>('');
+  const [phoneError, setPhoneError] = useState('');
 
   useEffect(() => {
     hanldeGetServiceCenters();
@@ -179,6 +181,8 @@ const OrderGiftCardScreen = () => {
     }
   };
 
+  
+
   const validateInputs = (actionType: string, inputName: string) => {
     if (actionType === 'add') {
       let errorArray = [...errorMessages];
@@ -199,39 +203,51 @@ const OrderGiftCardScreen = () => {
     setPhoneNumber(value);
   };
 
-  const handleValidateInputs = (name: string, value: string) => {
-    switch (name) {
-      case 'customer':
-        if (value === '') {
-          setCustomerError(state?.t('infoText.validate'));
-        } else {
-          if (customerError) {
-            setCustomerError('');
-          }
-        }
-        break;
-      case 'orderDetails':
-        if (value === '') {
-          setOrderDetailsError(state?.t('infoText.validate'));
-        } else {
-          if (orderDetailsError) {
-            setOrderDetailsError('');
-          }
-        }
-        break;
-      case 'address':
-        if (value === '') {
-          setAddressError(state?.t('infoText.validate'));
-        } else {
-          if (addressError) {
-            setAddressError('');
-          }
-        }
-        break;
-      default:
-        break;
-    }
-  };
+  // const handleValidateInputs = (name: string, value: string) => {
+  //   if(customer?.length <= 0) {
+  //     setNameError(state?.t('infoText.validate'));
+     
+  //   } else {
+  //     setNameError('');
+  //   }
+  //   if(phoneNumber.length <= 0) {
+  //     setPhoneError(state?.t('infoText.validate'));
+    
+  //   } else {
+  //     setPhoneError('');
+  //   }
+  //   switch (value) {
+  //     case 'customer':
+  //       if (name === 'add') {
+  //         setCustomerError(state?.t('infoText.validate'));
+  //       } else {
+  //         if (customerError) {
+  //           setCustomerError('');
+  //         }
+  //       }
+  //       break;
+  //     case 'orderDetails':
+  //       if (name === 'add') {
+  //         setOrderDetailsError(state?.t('infoText.validate'));
+  //       } else {
+  //         if (orderDetailsError) {
+  //           setOrderDetailsError('');
+  //         }
+  //       }
+  //       break;
+  //     case 'address':
+  //       if (name === 'add') {
+  //         setAddressError(state?.t('infoText.validate'));
+  //       } else {
+  //         if (addressError) {
+  //           setAddressError('');
+  //         }
+  //       }
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // };
 
   const toggleDeliveryOption = (option: string) => {
     if (option === 'fromMall') {
@@ -274,17 +290,96 @@ const OrderGiftCardScreen = () => {
       });
   };
 
-  const handleGiftCardOrder = () => {
-    if (phoneNumberError || customerError || orderDetailsError) {
-      return;
-    }
-    if (deliveryOption.fromCityMall && checkedServiceCenter.id === 0) {
-      return;
+  const handleName = (value: string) => {
+    setCustomer(value);
+  }
+
+  useEffect(() => {
+    if(customer === undefined) return;
+    if(customer.length <= 0) {
+      setNameError(state?.t('infoText.validate'));
     } else {
-      if (addressError) {
-        return;
+      setNameError('');
+    }
+  }, [customer]);
+
+  useEffect(() => {
+    if(phoneNumber === undefined) return;
+    if(phoneNumber.length != 9) {
+      setPhoneError(state?.t('infoText.validate'));
+    } else {
+      setPhoneError('');
+    }
+  }, [phoneNumber]);
+
+  useEffect(() => {
+    if(orderDetails === undefined) return;
+    if(orderDetails.length <= 0) {
+      setOrderDetailsError(state?.t('infoText.validate'));
+    } else {
+      setOrderDetailsError('');
+    }
+  }, [orderDetails]);
+
+  useEffect(() => {
+    if(deliveryOption.curierDelivery) {
+      if(address === undefined) return;
+      if(address.length <= 0) {
+        setAddressError(state?.t('infoText.validate'));
+      } else {
+        setAddressError('');
+      }
+    } else {
+      if(checkedServiceCenter.checked === false) {
+        setAddressError(state?.t('infoText.validate'));
+      } else {
+        setAddressError('');
       }
     }
+  }, [deliveryOption, address]);
+
+  const handleGiftCardOrder = () => {
+    if(!customer) {
+      setNameError(state?.t('infoText.validate'));
+      return;
+    } else {
+      setNameError('');
+    }
+    if(!phoneNumber) {
+      setPhoneError(state?.t('infoText.validate'));
+      return;
+    } else {
+      setPhoneError('');
+    }
+    if(!orderDetails) {
+      setOrderDetailsError(state?.t('infoText.validate'));
+      return;
+    } else {
+      setOrderDetailsError('');
+    }
+    if(!deliveryOption.curierDelivery && !deliveryOption.fromCityMall) {
+      setAddressError(state?.t('infoText.validate'));
+        return;
+    }else {
+      setAddressError('');
+    }
+    if(deliveryOption.curierDelivery) {
+      if(!address) {
+        setAddressError(state?.t('infoText.validate'));
+        return;
+      } else {
+        setAddressError('');
+      }
+    } else {
+      if(checkedServiceCenter.checked === false) {
+        setAddressError(state?.t('infoText.validate'));
+        return;
+      } else {
+        setAddressError('');
+      }
+    }
+
+
     setBtnLoading(true);
     // {
     //     "name": "string",
@@ -299,7 +394,7 @@ const OrderGiftCardScreen = () => {
     data = {
       name: customer,
       phone: '995' + phoneNumber,
-      orderDetails: orderDetails,
+      orderDetails: orderDetails || '',
       deliveryType: deliveryOption.fromCityMall ? 1 : 2,
     };
     if (deliveryOption.fromCityMall) {
@@ -397,6 +492,7 @@ const OrderGiftCardScreen = () => {
           {state?.t('screens.orderCards')}
         </Text>
         <GiftCards />
+
         <AppInput
           style={{
             marginTop: 20,
@@ -404,15 +500,14 @@ const OrderGiftCardScreen = () => {
           }}
           placeholder={state?.t('labels.nameSurname')}
           name="customer"
-          hasError={hasError}
-          isRequired={true}
-          validationRule="required"
+          validationRule=""
           addValidation={() => {}}
-          value={customer}
-          onChangeText={(newValue: string) => setCustomer(newValue)}
-        />
-        {customerError.length > 0 && (
-          <Text style={styles.errorText}>{customerError}</Text>
+          value={customer || ''}
+          onChangeText={handleName} 
+          isRequired={false}       
+           />
+        {(nameError?.length > 0) && (
+          <Text style={styles.errorText}>{nameError}</Text>
         )}
         <View style={[{flex: 1, flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: isDarkTheme ? Colors.white: Colors.black}, Platform.OS === 'ios' && {marginTop:15}]}>
         {/* <Text style={{color: isDarkTheme ? Colors.white : Colors.black, position: 'relative', bottom: 1}}>995</Text> */}
@@ -437,11 +532,10 @@ const OrderGiftCardScreen = () => {
           style={{color: isDarkTheme ? Colors.white : Colors.black}}
           placeholder={state?.t('labels.mobile')}
           name="phoneNumber"
-          validationRule="phoneNumber"
-          hasError={hasError}
-          isRequired={true}
-          value={phoneNumber}
-          addValidation={() => {}}
+          validationRule=""
+          isRequired={false}
+          value={phoneNumber || ''}
+          addValidation={validateInputs}
           onChangeText={(newValue: string) => handlePhoneNumber(newValue)}
           keyboardType="numeric"
           ignoreBorder={true}
@@ -449,8 +543,8 @@ const OrderGiftCardScreen = () => {
         />
         </View>
         </View>
-        {phoneNumberError.length > 0 && (
-          <Text style={styles.errorText}>{phoneNumberError}</Text>
+        {(phoneError.length > 0) && (
+          <Text style={styles.errorText}>{phoneError}</Text>
         )}
 
         <Text style={[styles.orderCardTitle, {marginTop: 30}]}>
@@ -459,20 +553,19 @@ const OrderGiftCardScreen = () => {
         <AppInput
           style={styles.detailsText}
           name="orderDetails"
-          isRequired={true}
-          validationRule="required"
-          hasError={hasError}
-          addValidation={validateInputs}
+          isRequired={false}
+          validationRule=""
+          addValidation={() => {}}
           placeholder={state?.t('infoText.describeText')}
           placeholderTextColor={Colors.darkGrey}
-          value={orderDetails}
+          value={orderDetails || ''}
           onChangeText={(newValue: string) => setOrderDetails(newValue)}
           multiline={true}
           numberOfLines={4}
           ignoreBorder={true}
         />
         {orderDetailsError.length > 0 && (
-          <Text style={styles.errorText}>{orderDetailsError}</Text>
+          <Text style={[styles.errorText, {position: 'relative', top: -15}]}>{orderDetailsError}</Text>
         )}
         <TouchableOpacity
           style={styles.checkBoxWithLabel}
@@ -513,23 +606,24 @@ const OrderGiftCardScreen = () => {
             <AppInput
               style={styles.detailsText}
               name="address"
-              isRequired={true}
-              validationRule="required"
-              hasError={hasError}
+              isRequired={false}
+              validationRule=""
               addValidation={() => {}}
               placeholder={state?.t('infoText.addressInfoText')}
               placeholderTextColor={Colors.darkGrey}
-              value={address}
+              value={address || ''}
               onChangeText={(newValue: string) => setAddress(newValue)}
               multiline={true}
               numberOfLines={4}
               ignoreBorder={true}
             />
-            {addressError.length > 0 && (
-              <Text style={styles.errorText}>{addressError}</Text>
-            )}
+            
           </View>
         )}
+
+{addressError.length > 0 && (
+              <Text style={[styles.errorText, {position: 'relative', top: -15}]}>{addressError}</Text>
+            )}
 
         <AppButton
           btnStyle={styles.btnStyle}

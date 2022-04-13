@@ -405,8 +405,8 @@ const CheckGiftCardBalanceScreen = () => {
                   </Text>
 
                   <View style={styles.date}>
-                    <TouchableOpacity
-                      onPress={() => setchoosedays(true)}
+                  <TouchableOpacity
+                      onPress={() => setchoosemonths(true)}
                       style={[styles.dateitem, styles.item1]}>
                       <Image
                         style={[
@@ -419,10 +419,10 @@ const CheckGiftCardBalanceScreen = () => {
                             : require('./../assets/images/arrow-black.png')
                         }
                       />
-                      <Text style={styles.dateValue}>{expireDay}</Text>
+                      <Text style={styles.dateValue}>{expireMonth}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      onPress={() => setchoosemonths(true)}
+                      onPress={() => setchoosedays(true)}
                       style={styles.dateitem}>
                       <Image
                         style={[
@@ -435,7 +435,7 @@ const CheckGiftCardBalanceScreen = () => {
                             : require('./../assets/images/arrow-black.png')
                         }
                       />
-                      <Text style={styles.dateValue}>{expireMonth}</Text>
+                      <Text style={styles.dateValue}>{expireDay}</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
