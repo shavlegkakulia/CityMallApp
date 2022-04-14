@@ -49,7 +49,7 @@ const OrderGiftCardScreen = () => {
   const [orderDetails, setOrderDetails] = useState<string | undefined>();
   const [orderDetailsError, setOrderDetailsError] = useState<string>('');
   const [address, setAddress] = useState<string | undefined>();
-  const [addressError, setAddressError] = useState<string>('');
+  const [addressError, setAddressError] = useState<string | undefined>();
   const [deliveryOption, setDeliveryOption] = useState<IDeliveryOption>({
     fromCityMall: false,
     curierDelivery: false,
@@ -60,6 +60,7 @@ const OrderGiftCardScreen = () => {
   const [resSuccess, setRespSuccess] = useState<boolean>(false);
   const [nameError, setNameError] = useState<string>('');
   const [phoneError, setPhoneError] = useState('');
+  const [isDeliveryInit, setIsDeliveryInit] = useState(false);
 
   useEffect(() => {
     hanldeGetServiceCenters();
@@ -322,6 +323,10 @@ const OrderGiftCardScreen = () => {
   }, [orderDetails]);
 
   useEffect(() => {
+    if(!isDeliveryInit) {
+      setIsDeliveryInit(true);
+      return;
+    };
     if(deliveryOption.curierDelivery) {
       if(address === undefined) return;
       if(address.length <= 0) {
@@ -336,7 +341,8 @@ const OrderGiftCardScreen = () => {
         setAddressError('');
       }
     }
-  }, [deliveryOption, address]);
+    
+  }, [deliveryOption, address, checkedServiceCenter]);
 
   const handleGiftCardOrder = () => {
     if(!customer) {
@@ -621,7 +627,7 @@ const OrderGiftCardScreen = () => {
           </View>
         )}
 
-{addressError.length > 0 && (
+{(addressError !== undefined && addressError.length > 0) && (
               <Text style={[styles.errorText, {position: 'relative', top: -15}]}>{addressError}</Text>
             )}
 

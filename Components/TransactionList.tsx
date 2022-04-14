@@ -33,9 +33,9 @@ const TransactionList = (props: any) => {
                     <Text numberOfLines={2} style={{ color: isDarkTheme ? Colors.white : Colors.black }}>{props.isPayment ? props.item.shortDescription : props.item?.merchantName}</Text>
                 </View>
             </View>
-            <View style={{flexDirection: 'row'}}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Text style={[{..._color}]}>{props.isPayment ? props.item.amount + ' ' + props.item.ccy : props.item?.points}</Text>
-                <Image source={require('./../assets/images/Star.png')} style={{width: 9, height: 9}} resizeMode={'contain'} />
+                {!props.isPayment && <Image source={require('./../assets/images/Star.png')} style={{width: 9, height: 9, marginLeft: 3}} resizeMode={'contain'} />}
                 </View>
         </View> 
     )

@@ -356,20 +356,23 @@ useEffect(() => {
                 styles.balanceWrapAmount,
                 isDarkTheme ? {color: Colors.white} : {color: Colors.black},
               ]}>
-              {formatNumber(state.clientInfo.ballance) || 0}
+              {formatNumber(state.clientInfo.ballance) || 0}₾
             </Text>
           </View>
           <View>
             <Text style={styles.balanceWrapTitle}>
               {state?.t('screens.cityPoint')}
             </Text>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text
               style={[
                 styles.balanceWrapAmount,
                 isDarkTheme ? {color: Colors.white} : {color: Colors.black},
+  
               ]}>
-              {formatNumber(state.clientInfo.points) || 0}
-            </Text>
+              {formatNumber(state.clientInfo.points) || 0}</Text>
+              <Image source={require('./../../assets/images/Star.png')} style={{width: 9, height: 9, marginLeft: 3}} resizeMode={'contain'} />
+            </View>
           </View>
         </View>
         <View style={{marginBottom: 30, width: '100%'}}>
