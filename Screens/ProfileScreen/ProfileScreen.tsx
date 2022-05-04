@@ -549,6 +549,7 @@ useEffect(() => {
                 <Text
                   style={{
                     fontSize: 10,
+                    marginBottom: 50,
                     color: isDarkTheme ? Colors.white : Colors.black,
                   }}>
                   {state?.t('infoText.transactionsNotFound')}
