@@ -6,6 +6,7 @@ import Loyalty from './Loyalty';
 import axios from 'axios';
 import envs from './../../config/env';
 import { AppContext } from '../../AppContext/AppContext';
+import translateService from '../../Services/translateService';
 
 
 type RouteParamList = {
@@ -28,7 +29,7 @@ const AboutUsIndex = () => {
             setStrings(res.data);
           }
         });
-      }, [state.lang]);
+      }, [translateService.lang]);
 
     return (
         routeParams.params.routeId === 1 ?
