@@ -113,6 +113,7 @@ export default {
         userExist: 'User already exists',
         emailChange: 'Email Changed',
         successMsg: 'Order Successful',
+        message: 'Operator will contact you',
         additionalInfo:
           'Our call center will contact you for more details',
         notFound: 'Page Not Found',

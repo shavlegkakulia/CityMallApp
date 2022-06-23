@@ -135,6 +135,18 @@ const OrderGiftCardScreen = () => {
       width: 300,
       alignSelf: 'center',
     },
+    message: {
+      color: isDarkTheme ? Colors.white : Colors.black,
+      fontFamily: 'HMpangram-Bold',
+      fontWeight: '700',
+      fontSize: 14,
+      lineHeight: 18,
+      textAlign: 'center',
+      textTransform: 'uppercase',
+      width: 300,
+      alignSelf: 'center',
+      marginTop: 20
+    },
     responseImg: {
       width: 64,
       height: 64,
@@ -664,6 +676,9 @@ const OrderGiftCardScreen = () => {
               />
               <Text style={styles.responseText}>
                 {state?.t('infoText.successMsg')}
+              </Text>
+              <Text style={styles.message}>
+                {state?.t('infoText.message')}
               </Text>
             </View>
           )}
