@@ -41,7 +41,9 @@ export default {
         checkbalance: 'Balance check',
         payuninfo: 'Additional operations in Payunicard',
         skip: 'Skip',
-        signin: 'SignIn'
+        signin: 'SignIn',
+        copied: 'Copied',
+        accountNumber: 'Account Number'
     },
     
     screens: {

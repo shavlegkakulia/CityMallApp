@@ -32,6 +32,8 @@ import {GetVouchersToBuy, IVouchers} from '../../Services/Api/VouchersApi';
 import VaucherPromptBox from '../../Components/VaucherPromptBox';
 import translateService from '../../Services/translateService';
 import { subscriptionService } from '../../Services/SubscriptionServive';
+import Clipboard from '@react-native-community/clipboard';
+import TemporaryText from '../../Components/TemporaryText';
 
 //transactionType
 export enum tranTypes {
@@ -71,6 +73,19 @@ const ProfileScreen = (props: any) => {
   const darkArrowIcon = require('../../assets/images/arrow-black.png');
   const lightArrowIcon = require('../../assets/images/arrow-sm.png');
 
+  const [outer, setOuter] = useState(true);
+  const [copiedText, setCopiedText] = useState<string | undefined>();
+  const copiedTextTtl = useRef<NodeJS.Timeout>();
+
+  const copyToClipboard = (str: string) => {
+    setOuter(false);
+    Clipboard.setString(str);
+    setCopiedText(str);
+    copiedTextTtl.current = setTimeout(() => {
+      setCopiedText(undefined);
+    }, 1000);
+  };
+
   useEffect(() => {
     getClientData();
     // getClientTransactions();
@@ -91,7 +106,7 @@ const ProfileScreen = (props: any) => {
 
   const getClientData = () => {
     ApiServices.GetClientInfo()
-      .then(res => {
+      .then(res => { console.log(res.data)
         setGlobalState({clientInfo: res.data});
         setcinfo(res.data);
       })
@@ -329,6 +344,8 @@ useEffect(() => {
   };
 }, []);
 
+const accountNumber = '123456789456';
+
   return (
     <AppLayout pageTitle={state?.t('screens.room')}>
       <ScrollView
@@ -364,14 +381,18 @@ useEffect(() => {
               {state?.t('screens.cityPoint')}
             </Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Text
-              style={[
-                styles.balanceWrapAmount,
-                isDarkTheme ? {color: Colors.white} : {color: Colors.black},
-  
-              ]}>
-              {formatNumber(state.clientInfo.points) || 0}</Text>
-              <Image source={require('./../../assets/images/Star.png')} style={{width: 9, height: 9, marginLeft: 3}} resizeMode={'contain'} />
+              <Text
+                style={[
+                  styles.balanceWrapAmount,
+                  isDarkTheme ? {color: Colors.white} : {color: Colors.black},
+                ]}>
+                {formatNumber(state.clientInfo.points) || 0}
+              </Text>
+              <Image
+                source={require('./../../assets/images/Star.png')}
+                style={{width: 9, height: 9, marginLeft: 3}}
+                resizeMode={'contain'}
+              />
             </View>
           </View>
         </View>
@@ -422,6 +443,35 @@ useEffect(() => {
               {state?.t('screens.myVouchers')}
             </Text>
           </TouchableOpacity>
+        </View>
+        <View style={{marginVertical: 30, flexDirection: 'row'}}>
+          <View>
+            <Text style={[styles.promotionsTitle, {alignSelf: 'flex-start'}]}>
+              {state?.t('common.accountNumber')}
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                copyToClipboard(accountNumber);
+              }}>
+              <Text
+                style={[
+                  styles.promotionsTitle,
+                  {
+                    textAlign: 'left',
+                    alignSelf: 'flex-start',
+                    marginTop: 10,
+                    fontSize: 13,
+                    letterSpacing: 1,
+                  },
+                ]}>
+                {accountNumber}
+                <TemporaryText
+                  text={state?.t('common.copied')}
+                  show={accountNumber === copiedText}
+                />
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
         <View style={{marginBottom: 30}}>
           <View style={styles.promotionContainer}>

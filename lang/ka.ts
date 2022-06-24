@@ -41,7 +41,9 @@ export default {
     checkbalance: 'ნაშთის შემოწმბა',
     payuninfo: 'დამატებითი ოპერაციები ფეიუნიქარდში',
     skip: 'გამოტოვება',
-    signin: 'ავტორიზაცია'
+    signin: 'ავტორიზაცია',
+    copied: 'დაკოპირდა',
+    accountNumber: 'ანგარიშის ნომერი'
     
 
   },
