@@ -444,26 +444,21 @@ const accountNumber = '123456789456';
             </Text>
           </TouchableOpacity>
         </View>
-        <View style={{marginVertical: 30, flexDirection: 'row'}}>
+        <View style={styles.accountNumberSection}>
           <View>
-            <Text style={[styles.promotionsTitle, {alignSelf: 'flex-start'}]}>
+            <Text style={styles.accountTitle}>
               {state?.t('common.accountNumber')}
             </Text>
             <TouchableOpacity
+            style={styles.accountButton}
               onPress={() => {
                 copyToClipboard(accountNumber);
               }}>
-              <Text
-                style={[
-                  styles.promotionsTitle,
-                  {
-                    textAlign: 'left',
-                    alignSelf: 'flex-start',
-                    marginTop: 10,
-                    fontSize: 13,
-                    letterSpacing: 1,
-                  },
-                ]}>
+              <Text style={styles.accountNumber}>
+                <Image
+                  source={require('./../../assets/images/textCopyIcon.png')}
+                  style={styles.copyImage}
+                />{' '}
                 {accountNumber}
                 <TemporaryText
                   text={state?.t('common.copied')}
@@ -712,6 +707,35 @@ const styles = StyleSheet.create({
   lounchicon: {
     marginLeft: 5,
   },
+  accountNumberSection: {
+    marginTop: 30, 
+    marginBottom: 40, 
+    flexDirection: 'row'
+  },
+  accountTitle: {
+    color: Colors.white,
+    fontFamily: 'HMpangram-Bold',
+    fontSize: 14,
+    lineHeight: 17,
+    fontWeight: '900',
+    textTransform: 'uppercase',
+  },
+  accountNumber: {
+    color: Colors.white,
+    fontFamily: 'HMpangram-Bold',
+    lineHeight: 17,
+    fontWeight: '900',
+    textTransform: 'uppercase',
+    fontSize: 13,
+    letterSpacing: 1
+  },
+  copyImage: {
+    width: 12,
+    height: 12
+  },
+  accountButton: {
+    paddingVertical: 10
+  }
 });
 
 export default ProfileScreen;
