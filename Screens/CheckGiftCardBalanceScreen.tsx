@@ -141,7 +141,7 @@ const CheckGiftCardBalanceScreen = () => {
     },
     deposite: {
       fontFamily: 'HMpangram-Bold',
-      fontSize: 12,
+      fontSize: 16,
       position: 'absolute',
       color: isDarkTheme ? Colors.white : Colors.black,
       marginTop: 10,
@@ -218,12 +218,14 @@ const CheckGiftCardBalanceScreen = () => {
     };
     ApiServices.GetGiftBallance(data)
       .then(res => {
+        console.log(res)
         if (res.status === 200) {
           setbalance(res.data.ballance);
         }
         setbtnLoading(false);
       })
-      .catch(() => {
+      .catch((e) => {
+        console.log(e.response)
         setbtnLoading(false);
       });
   };
@@ -454,7 +456,7 @@ const CheckGiftCardBalanceScreen = () => {
         titleStyle={styles.btnTitleStyle}
         loaderStyle={loaderStyle}
         loading={btnLoading}
-        title={state?.t('common.next')}
+        title={state?.t('infoText.checkBalance')}
         onPress={check}
       />
     </Layout>
