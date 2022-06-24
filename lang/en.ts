@@ -9,7 +9,7 @@ export default {
         buy: 'Buy',
         price: 'City Points',
         accept: 'OK',
-        again: 'Again',
+        again: 'Resend',
         smsCode: 'SMS Code',
         silver: 'SILVER',
         gold: 'GOLD',
@@ -117,14 +117,16 @@ export default {
         additionalInfo:
           'Our call center will contact you for more details',
         notFound: 'Page Not Found',
-        enterCode: 'Please Enter OTP',
-        codeIncorrect: 'Invalid OTP',
+        enterCode: 'Please Enter SMS Code',
+        codeIncorrect: 'Invalid SMS Code',
         standartText: 'Till status "STANDARD"',
         silverText: 'Till status "SILVER"',
         goldText: 'Till status "GOLD"',
         platinumText: 'Till status "PLATINUM"',
         registrationText:
-          'Register for the membership of City Malls Loyalty program',
+          'Complete the registration and become a loyal customer',
+        skipAuthText: 
+        'Proceed To Primary Authorization',
         addressCityMall:
           'City Mall Saburtalo, {q1} City Mall Gldani, {q2}',
         loialtyText:
@@ -138,7 +140,7 @@ export default {
         messageUsText :'Message in review, we will contact you shortly',
         cardNumber: 'Card Number',
         cardDate: 'Valid Thru',
-        describeText: 'Please enter card(s) design, quantity & amount',
+        describeText: 'Please enter card(s) design, quantity & amount(min 50 GEL - max 5000 GEL)',
         addressInfoText: 'Please enter address',
         selectGender: 'Please select gender',
         terms: 'Please agree to terms and conditions',
