@@ -324,8 +324,8 @@ const Stores: React.FC = () => {
             <Image
               source={
                 isFilterCollapsed
-                  ? require('./../../assets/images/icon-collapse-up.png')
-                  : require('./../../assets/images/icon-collapse-down.png')
+                  ? isDarkTheme ? require('./../../assets/images/icon-collapse-up.png') : require('./../../assets/images/icon-collapse-up-light.png')
+                  : isDarkTheme ?  require('./../../assets/images/icon-collapse-down.png') : require('./../../assets/images/icon-collapse-down-light.png')
               }
               style={styles.sollapseIcon}
             />

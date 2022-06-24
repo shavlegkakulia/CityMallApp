@@ -32,6 +32,8 @@ import {GetVouchersToBuy, IVouchers} from '../../Services/Api/VouchersApi';
 import VaucherPromptBox from '../../Components/VaucherPromptBox';
 import translateService from '../../Services/translateService';
 import { subscriptionService } from '../../Services/SubscriptionServive';
+import Clipboard from '@react-native-community/clipboard';
+import TemporaryText from '../../Components/TemporaryText';
 
 //transactionType
 export enum tranTypes {
@@ -71,6 +73,19 @@ const ProfileScreen = (props: any) => {
   const darkArrowIcon = require('../../assets/images/arrow-black.png');
   const lightArrowIcon = require('../../assets/images/arrow-sm.png');
 
+  const [outer, setOuter] = useState(true);
+  const [copiedText, setCopiedText] = useState<string | undefined>();
+  const copiedTextTtl = useRef<NodeJS.Timeout>();
+
+  const copyToClipboard = (str: string) => {
+    setOuter(false);
+    Clipboard.setString(str);
+    setCopiedText(str);
+    copiedTextTtl.current = setTimeout(() => {
+      setCopiedText(undefined);
+    }, 1000);
+  };
+
   useEffect(() => {
     getClientData();
     // getClientTransactions();
@@ -91,7 +106,7 @@ const ProfileScreen = (props: any) => {
 
   const getClientData = () => {
     ApiServices.GetClientInfo()
-      .then(res => {
+      .then(res => { console.log(res.data)
         setGlobalState({clientInfo: res.data});
         setcinfo(res.data);
       })
@@ -111,7 +126,7 @@ const ProfileScreen = (props: any) => {
       rowCount,
       isDarkTheme ? 'dark' : 'light',
     )
-      .then(res => {
+      .then(res => {console.log('>>>', res.data.data)
         if (renew) {
           setClientPaymentTransactions(res.data.data!);
         } else {
@@ -133,7 +148,7 @@ const ProfileScreen = (props: any) => {
       })
       .catch(e => {
         setCanOperation(true);
-        setFetchingMore(false);
+        //setFetchingMore(false);
       });
   };
 
@@ -166,7 +181,7 @@ const ProfileScreen = (props: any) => {
       })
       .catch(e => {
         setCanOperation(true);
-        setFetchingMore(false);
+       // setFetchingMore(false);
       });
   };
 
@@ -247,6 +262,7 @@ const ProfileScreen = (props: any) => {
     getClientData();
     setRenewing(true);
     setRowIndex(1);
+    setStopFetching(false);
     if (isMoneyTransaction) {
       getClientPayTransactions(true);
     } else {
@@ -271,7 +287,7 @@ const ProfileScreen = (props: any) => {
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     if (stopFetching) return;
-    const paddingToBottom = 20;
+    const paddingToBottom = 5;
     const isChunk =
       event.nativeEvent.layoutMeasurement.height +
         event.nativeEvent.contentOffset.y >=
@@ -328,6 +344,8 @@ useEffect(() => {
   };
 }, []);
 
+const accountNumber = '123456789456';
+
   return (
     <AppLayout pageTitle={state?.t('screens.room')}>
       <ScrollView
@@ -355,20 +373,27 @@ useEffect(() => {
                 styles.balanceWrapAmount,
                 isDarkTheme ? {color: Colors.white} : {color: Colors.black},
               ]}>
-              {formatNumber(state.clientInfo.ballance) || 0}
+              {formatNumber(state.clientInfo.ballance) || 0}₾
             </Text>
           </View>
           <View>
             <Text style={styles.balanceWrapTitle}>
               {state?.t('screens.cityPoint')}
             </Text>
-            <Text
-              style={[
-                styles.balanceWrapAmount,
-                isDarkTheme ? {color: Colors.white} : {color: Colors.black},
-              ]}>
-              {formatNumber(state.clientInfo.points) || 0}
-            </Text>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text
+                style={[
+                  styles.balanceWrapAmount,
+                  isDarkTheme ? {color: Colors.white} : {color: Colors.black},
+                ]}>
+                {formatNumber(state.clientInfo.points) || 0}
+              </Text>
+              <Image
+                source={require('./../../assets/images/Star.png')}
+                style={{width: 9, height: 9, marginLeft: 3}}
+                resizeMode={'contain'}
+              />
+            </View>
           </View>
         </View>
         <View style={{marginBottom: 30, width: '100%'}}>
@@ -396,7 +421,7 @@ useEffect(() => {
               />
             </TouchableOpacity>
           </View>
-          {state.clientInfo ? <StatusBar data={state.clientInfo} /> : null}
+          {cinfo ? <StatusBar data={cinfo} /> : null}
         </View>
         <View style={{marginBottom: 20, alignItems: 'center'}}>
           <TouchableOpacity
@@ -418,6 +443,30 @@ useEffect(() => {
               {state?.t('screens.myVouchers')}
             </Text>
           </TouchableOpacity>
+        </View>
+        <View style={styles.accountNumberSection}>
+          <View>
+            <Text style={styles.accountTitle}>
+              {state?.t('common.accountNumber')}
+            </Text>
+            <TouchableOpacity
+            style={styles.accountButton}
+              onPress={() => {
+                copyToClipboard(accountNumber);
+              }}>
+              <Text style={styles.accountNumber}>
+                <Image
+                  source={require('./../../assets/images/textCopyIcon.png')}
+                  style={styles.copyImage}
+                />{' '}
+                {accountNumber}
+                <TemporaryText
+                  text={state?.t('common.copied')}
+                  show={accountNumber === copiedText}
+                />
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
         <View style={{marginBottom: 30}}>
           <View style={styles.promotionContainer}>
@@ -545,6 +594,7 @@ useEffect(() => {
                 <Text
                   style={{
                     fontSize: 10,
+                    marginBottom: 50,
                     color: isDarkTheme ? Colors.white : Colors.black,
                   }}>
                   {state?.t('infoText.transactionsNotFound')}
@@ -657,6 +707,35 @@ const styles = StyleSheet.create({
   lounchicon: {
     marginLeft: 5,
   },
+  accountNumberSection: {
+    marginTop: 30, 
+    marginBottom: 40, 
+    flexDirection: 'row'
+  },
+  accountTitle: {
+    color: Colors.white,
+    fontFamily: 'HMpangram-Bold',
+    fontSize: 14,
+    lineHeight: 17,
+    fontWeight: '900',
+    textTransform: 'uppercase',
+  },
+  accountNumber: {
+    color: Colors.white,
+    fontFamily: 'HMpangram-Bold',
+    lineHeight: 17,
+    fontWeight: '900',
+    textTransform: 'uppercase',
+    fontSize: 13,
+    letterSpacing: 1
+  },
+  copyImage: {
+    width: 12,
+    height: 12
+  },
+  accountButton: {
+    paddingVertical: 10
+  }
 });
 
 export default ProfileScreen;

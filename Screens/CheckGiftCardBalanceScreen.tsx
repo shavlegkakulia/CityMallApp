@@ -141,7 +141,7 @@ const CheckGiftCardBalanceScreen = () => {
     },
     deposite: {
       fontFamily: 'HMpangram-Bold',
-      fontSize: 12,
+      fontSize: 16,
       position: 'absolute',
       color: isDarkTheme ? Colors.white : Colors.black,
       marginTop: 10,
@@ -218,12 +218,14 @@ const CheckGiftCardBalanceScreen = () => {
     };
     ApiServices.GetGiftBallance(data)
       .then(res => {
+        console.log(res)
         if (res.status === 200) {
           setbalance(res.data.ballance);
         }
         setbtnLoading(false);
       })
-      .catch(() => {
+      .catch((e) => {
+        console.log(e.response)
         setbtnLoading(false);
       });
   };
@@ -405,8 +407,8 @@ const CheckGiftCardBalanceScreen = () => {
                   </Text>
 
                   <View style={styles.date}>
-                    <TouchableOpacity
-                      onPress={() => setchoosedays(true)}
+                  <TouchableOpacity
+                      onPress={() => setchoosemonths(true)}
                       style={[styles.dateitem, styles.item1]}>
                       <Image
                         style={[
@@ -419,10 +421,10 @@ const CheckGiftCardBalanceScreen = () => {
                             : require('./../assets/images/arrow-black.png')
                         }
                       />
-                      <Text style={styles.dateValue}>{expireDay}</Text>
+                      <Text style={styles.dateValue}>{expireMonth}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      onPress={() => setchoosemonths(true)}
+                      onPress={() => setchoosedays(true)}
                       style={styles.dateitem}>
                       <Image
                         style={[
@@ -435,7 +437,7 @@ const CheckGiftCardBalanceScreen = () => {
                             : require('./../assets/images/arrow-black.png')
                         }
                       />
-                      <Text style={styles.dateValue}>{expireMonth}</Text>
+                      <Text style={styles.dateValue}>{expireDay}</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -454,7 +456,7 @@ const CheckGiftCardBalanceScreen = () => {
         titleStyle={styles.btnTitleStyle}
         loaderStyle={loaderStyle}
         loading={btnLoading}
-        title={state?.t('common.next')}
+        title={state?.t('infoText.checkBalance')}
         onPress={check}
       />
     </Layout>

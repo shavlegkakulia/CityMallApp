@@ -60,7 +60,7 @@ const CategoryTypes: any = {
     } else {
       handleGetNews(pagPage, true);
     }
-  }, [routeParams.params.routeId, routeParams.params.id]);
+  }, [routeParams.params.routeId, routeParams.params.id, translateService.lang]);
 
   useEffect(() => {
     handleSetOffers();

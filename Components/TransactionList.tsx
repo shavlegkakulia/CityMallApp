@@ -7,6 +7,18 @@ import { tranTypes } from '../Screens/ProfileScreen/ProfileScreen';
 const TransactionList = (props: any) => {
     const { state } = useContext(AppContext);
     const { isDarkTheme } = state;
+
+    let _color = {color: Colors.successGreen};
+
+    if(props.isPayment) {
+        if(parseFloat(props.item.amount) > 0) {
+            _color = {color: Colors.successGreen}
+        } else {
+            _color = {color: Colors.red}
+        }
+    } else {
+        _color = props.item.transactionType === tranTypes.accumulate ? {color: Colors.successGreen} : {color: Colors.red};
+    }
   
     return (
         <View style={styles.trListWrap}>
@@ -21,7 +33,10 @@ const TransactionList = (props: any) => {
                     <Text numberOfLines={2} style={{ color: isDarkTheme ? Colors.white : Colors.black }}>{props.isPayment ? props.item.shortDescription : props.item?.merchantName}</Text>
                 </View>
             </View>
-            <Text style={[{color: props.item.transactionType === tranTypes.accumulate ? Colors.successGreen : Colors.red}]}>{props.isPayment ? props.item.amount + ' ' + props.item.ccy : props.item?.points}</Text>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Text style={[{..._color}]}>{props.isPayment ? props.item.amount + ' ' + props.item.ccy : props.item?.points}</Text>
+                {!props.isPayment && <Image source={require('./../assets/images/Star.png')} style={{width: 9, height: 9, marginLeft: 3}} resizeMode={'contain'} />}
+                </View>
         </View> 
     )
 };
