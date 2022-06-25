@@ -344,7 +344,7 @@ useEffect(() => {
   };
 }, []);
 
-const accountNumber = '123456789456';
+const accountNumber = cinfo?.loyaltyAccountNumber;
 
   return (
     <AppLayout pageTitle={state?.t('screens.room')}>
@@ -444,7 +444,7 @@ const accountNumber = '123456789456';
             </Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.accountNumberSection}>
+        {accountNumber !== undefined ? <View style={styles.accountNumberSection}>
           <View>
             <Text style={styles.accountTitle}>
               {state?.t('common.accountNumber')}
@@ -467,7 +467,7 @@ const accountNumber = '123456789456';
               </Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </View>: null}
         <View style={{marginBottom: 30}}>
           <View style={styles.promotionContainer}>
             <Text

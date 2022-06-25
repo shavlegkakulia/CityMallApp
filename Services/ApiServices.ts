@@ -20,6 +20,7 @@ export interface IClientInfo {
     categoryPointInfo?: ICategoryPointInfo[],
     hasPayCard?: boolean;
     isRegisterd?:boolean;
+    loyaltyAccountNumber?: string;
 }
 
 export interface IMerchants {
