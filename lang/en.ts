@@ -38,7 +38,7 @@ export default {
         subCategories: 'Subcategories',
         location: 'Location',
         map: 'Map',
-        checkbalance: 'Balance check',
+        checkbalance: 'Check balance',
         payuninfo: 'Additional operations in Payunicard',
         skip: 'Skip',
         signin: 'SignIn',

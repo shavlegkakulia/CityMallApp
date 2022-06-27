@@ -38,7 +38,7 @@ export default {
     subCategories: 'ქვეკატეგორიები',
     location: 'ლოკაცია',
     map: 'რუქა',
-    checkbalance: 'ნაშთის შემოწმბა',
+    checkbalance: 'ბალანსის შემოწმება',
     payuninfo: 'დამატებითი ოპერაციები ფეიუნიქარდში',
     skip: 'გამოტოვება',
     signin: 'ავტორიზაცია',
@@ -162,7 +162,7 @@ export default {
     aboutStatus: ' სტატუსის შესახებ ინფო',
     statusGift: 'რა ეკუთვნის თითოეულ სტატუსზე',
     orderGidtCard: 'სასაჩუქრე ბარათის შეკვეთა',
-    checkBalance: 'ნაშთის შემოწმება'
+    checkBalance: 'ბალანსის შემოწმება'
 
 
 

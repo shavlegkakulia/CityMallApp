@@ -455,11 +455,11 @@ const accountNumber = cinfo?.loyaltyAccountNumber;
                 copyToClipboard(accountNumber);
               }}>
               <Text style={styles.accountNumber}>
+                {accountNumber}{' '}
                 <Image
                   source={require('./../../assets/images/textCopyIcon.png')}
                   style={styles.copyImage}
-                />{' '}
-                {accountNumber}
+                />
                 <TemporaryText
                   text={state?.t('common.copied')}
                   show={accountNumber === copiedText}
@@ -715,8 +715,8 @@ const styles = StyleSheet.create({
   accountTitle: {
     color: Colors.white,
     fontFamily: 'HMpangram-Bold',
-    fontSize: 14,
-    lineHeight: 17,
+    fontSize: 16,
+    lineHeight: 21,
     fontWeight: '900',
     textTransform: 'uppercase',
   },
