@@ -73,12 +73,10 @@ const ProfileScreen = (props: any) => {
   const darkArrowIcon = require('../../assets/images/arrow-black.png');
   const lightArrowIcon = require('../../assets/images/arrow-sm.png');
 
-  const [outer, setOuter] = useState(true);
   const [copiedText, setCopiedText] = useState<string | undefined>();
   const copiedTextTtl = useRef<NodeJS.Timeout>();
 
   const copyToClipboard = (str: string) => {
-    setOuter(false);
     Clipboard.setString(str);
     setCopiedText(str);
     copiedTextTtl.current = setTimeout(() => {
@@ -444,7 +442,7 @@ const accountNumber = cinfo?.loyaltyAccountNumber;
             </Text>
           </TouchableOpacity>
         </View>
-        {accountNumber !== undefined ? <View style={styles.accountNumberSection}>
+        {(accountNumber !== undefined && accountNumber.length > 0) ? <View style={styles.accountNumberSection}>
           <View>
             <Text style={styles.accountTitle}>
               {state?.t('common.accountNumber')}
@@ -454,7 +452,7 @@ const accountNumber = cinfo?.loyaltyAccountNumber;
               onPress={() => {
                 copyToClipboard(accountNumber);
               }}>
-              <Text style={styles.accountNumber}>
+              <Text style={[styles.accountNumber, {color: isDarkTheme ? Colors.white : Colors.black}]}>
                 {accountNumber}{' '}
                 <Image
                   source={require('./../../assets/images/textCopyIcon.png')}

@@ -15,6 +15,8 @@ import { GetOffers, IOffer } from "../Services/Api/OffersApi";
 import translateService from "../Services/translateService";
 import AsyncStorage from "../Services/StorageService";
 import { subscriptionService } from "../Services/SubscriptionServive";
+import Clipboard from "@react-native-community/clipboard";
+import TemporaryText from "../Components/TemporaryText";
 
 const HomeScreen = () => {
     const { state, setGlobalState } = useContext(AppContext);
@@ -34,6 +36,16 @@ const HomeScreen = () => {
     const [initLoading, setInitLoading] = useState<boolean>(true);
     const infoUpdate = useRef<NodeJS.Timer>();
     const [isSkip, setIsSkip] = useState(false);
+    const [copiedText, setCopiedText] = useState<string | undefined>();
+    const copiedTextTtl = useRef<NodeJS.Timeout>();
+  
+    const copyToClipboard = (str: string) => {
+      Clipboard.setString(str);
+      setCopiedText(str);
+      copiedTextTtl.current = setTimeout(() => {
+        setCopiedText(undefined);
+      }, 1000);
+    };
 
     useEffect(() => {
         handleGetClientCards();
@@ -221,77 +233,167 @@ const HomeScreen = () => {
 
       return (
         <AppLayout pageTitle={state?.t('screens.home')}>
-            <View style={{ flex: 1, backgroundColor: isDarkTheme ? Colors.black : Colors.white }}>
-                <View style={{ flex: 4.5, justifyContent: 'center' }}>
-                    {!initLoading ?
-                        <UserCardSmall
-                            cardNumber={clientDetails?.[0]?.card.replace(
-                                /\b(\d{4})(\d{4})(\d{4})(\d{4})\b/,
-                                '$1  $2  $3  $4',
-                            )}
-                            skip={isSkip}
-                            navigateToBarCode={() => navigate('UserCardWithBarcode')}
-                            navigateToReg={() => isSkip ? navigate('AuthScreenWithSkip', { skip: true }) : navigate('AboutUs', { routeId: 2 })} />
-                        :
-                        <ActivityIndicator animating={initLoading} color='#dadde1' />
-                    }
-                </View>
-
-                {state.clientInfo !== undefined && <View style={styles.amountInfo}>
-                    <View style={[styles.accesAmount, styles.pointsInfo, Platform.OS === 'ios' && {minHeight: 50, minWidth: 145},{borderColor: isDarkTheme ? Colors.white : Colors.black}]}>
-                        <Text style={[styles.amountTitle, { color: isDarkTheme ? Colors.white : Colors.black }]}>
-                        {state?.t('screens.deposit')}
-                        </Text>
-                        <Text style={[styles.amountValue, {color: isDarkTheme ? Colors.white : Colors.black}]}>{formatNumber(state.clientInfo?.ballance || 0)}₾</Text>
-                    </View>
-
-                    <View style={[styles.pointsInfo, Platform.OS === 'ios' && {minHeight: 50},{borderColor: isDarkTheme ? Colors.white : Colors.black}]}>
-                        <Text style={[styles.amountTitle, { color: isDarkTheme ? Colors.white : Colors.black}]}>
-                        {state?.t('screens.cityPoint')}
-                        </Text>
-                        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                        <Text style={[styles.amountValue, {color: isDarkTheme ? Colors.white : Colors.black}]}>{formatNumber(state.clientInfo?.points || 0) || 0}
-                              
-                             </Text>
-                             <Image resizeMode={'contain'} source={require('./../assets/images/Star.png')} style={{marginHorizontal: 5, width: 9, height: 9}} />
-                  </View>
-                    </View>
-                </View>}
-
-                <Image style={{ width: '100%' }} source={require('../assets/images/gradient-line.png')} />
-                <View style={{ flex: 7.5 }}>
-                    <View style={{ flex: 1 }}>
-                        <View style={styles.promotionContainer}>
-                            <Text style={[styles.promotionsTitle, { color: isDarkTheme ? Colors.white : Colors.black }]}>
-                            {state?.t('common.offers')}
-                            </Text>
-                            <PaginationDots length={paginationDotCount(offers, 4)} step={offersStep} />
-                        </View>
-                        <View style={{ flex: 10, position: 'relative' }}>
-                            <ScrollView contentContainerStyle={{ flexGrow: 1, flexDirection: "row" }} showsVerticalScrollIndicator={false}>
-                                {(offersView !== undefined && offersView?.length > 0) && <ScrollView
-                                    pagingEnabled={true}
-                                    contentContainerStyle={{ flexDirection: 'row' }}
-                                    showsHorizontalScrollIndicator={false}
-                                    horizontal={true}
-                                    onScroll={({ nativeEvent }) => {
-                                        onChangeSectionStep(nativeEvent)
-                                    }}>
-                                    {offersView?.map((el, i) => (
-                                        <View key={i}>
-                                            {el}
-                                        </View>
-                                    ))}
-                                    
-                                </ScrollView>}
-                            </ScrollView> 
-                            {isLoading && <ActivityIndicator color={isDarkTheme ? Colors.white : Colors.black} style={{alignSelf: 'center', position: 'absolute', top: '50%', transform:[{translateY: -50}]}} />}
-                        </View>
-                    </View>
-                </View>
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: isDarkTheme ? Colors.black : Colors.white,
+            }}>
+            <View style={{flex: 4.5, justifyContent: 'center'}}>
+              {!initLoading ? (
+                <UserCardSmall
+                  cardNumber={clientDetails?.[0]?.card.replace(
+                    /\b(\d{4})(\d{4})(\d{4})(\d{4})\b/,
+                    '$1  $2  $3  $4',
+                  )}
+                  skip={isSkip}
+                  navigateToBarCode={() => navigate('UserCardWithBarcode')}
+                  navigateToReg={() =>
+                    isSkip
+                      ? navigate('AuthScreenWithSkip', {skip: true})
+                      : navigate('AboutUs', {routeId: 2})
+                  }
+                />
+              ) : (
+                <ActivityIndicator animating={initLoading} color="#dadde1" />
+              )}
             </View>
+
+            {state.clientInfo !== undefined && (
+              <View style={styles.amountInfo}>
+                {(state.clientInfo.loyaltyAccountNumber !== undefined && state.clientInfo.loyaltyAccountNumber.length > 0) ? (
+                  <View style={styles.accountNumberSection}>
+                    <View>
+                      <TouchableOpacity
+                        style={styles.accountButton}
+                        onPress={() => {
+                          copyToClipboard(state.clientInfo.loyaltyAccountNumber);
+                        }}>
+                        <Text style={[styles.accountNumber, {color: isDarkTheme ? Colors.white : Colors.black}]}>
+                          {state.clientInfo.loyaltyAccountNumber}{' 123123123123'}
+                          <Image
+                            source={require('./../assets/images/textCopyIcon.png')}
+                            style={styles.copyImage}
+                          />
+                          <TemporaryText
+                            text={state?.t('common.copied')}
+                            show={state.clientInfo.loyaltyAccountNumber === copiedText}
+                          />
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                ) : null}
+                <View style={styles.depositInfo}>
+                <View
+                  style={[
+                    styles.accesAmount,
+                    styles.pointsInfo,
+                    Platform.OS === 'ios' && {minHeight: 50, minWidth: 145},
+                    {borderColor: isDarkTheme ? Colors.white : Colors.black},
+                  ]}>
+                  <Text
+                    style={[
+                      styles.amountTitle,
+                      {color: isDarkTheme ? Colors.white : Colors.black},
+                    ]}>
+                    {state?.t('screens.deposit')}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.amountValue,
+                      {color: isDarkTheme ? Colors.white : Colors.black},
+                    ]}>
+                    {formatNumber(state.clientInfo?.ballance || 0)}₾
+                  </Text>
+                </View>
+
+                <View
+                  style={[
+                    styles.pointsInfo,
+                    Platform.OS === 'ios' && {minHeight: 50},
+                    {borderColor: isDarkTheme ? Colors.white : Colors.black},
+                  ]}>
+                  <Text
+                    style={[
+                      styles.amountTitle,
+                      {color: isDarkTheme ? Colors.white : Colors.black},
+                    ]}>
+                    {state?.t('screens.cityPoint')}
+                  </Text>
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Text
+                      style={[
+                        styles.amountValue,
+                        {color: isDarkTheme ? Colors.white : Colors.black},
+                      ]}>
+                      {formatNumber(state.clientInfo?.points || 0) || 0}
+                    </Text>
+                    <Image
+                      resizeMode={'contain'}
+                      source={require('./../assets/images/Star.png')}
+                      style={{marginHorizontal: 5, width: 9, height: 9}}
+                    />
+                  </View>
+                </View>
+                </View>
+              </View>
+            )}
+
+            <Image
+              style={{width: '100%'}}
+              source={require('../assets/images/gradient-line.png')}
+            />
+            <View style={{flex: 7.5}}>
+              <View style={{flex: 1}}>
+                <View style={styles.promotionContainer}>
+                  <Text
+                    style={[
+                      styles.promotionsTitle,
+                      {color: isDarkTheme ? Colors.white : Colors.black},
+                    ]}>
+                    {state?.t('common.offers')}
+                  </Text>
+                  <PaginationDots
+                    length={paginationDotCount(offers, 4)}
+                    step={offersStep}
+                  />
+                </View>
+                <View style={{flex: 10, position: 'relative'}}>
+                  <ScrollView
+                    contentContainerStyle={{flexGrow: 1, flexDirection: 'row'}}
+                    showsVerticalScrollIndicator={false}>
+                    {offersView !== undefined && offersView?.length > 0 && (
+                      <ScrollView
+                        pagingEnabled={true}
+                        contentContainerStyle={{flexDirection: 'row'}}
+                        showsHorizontalScrollIndicator={false}
+                        horizontal={true}
+                        onScroll={({nativeEvent}) => {
+                          onChangeSectionStep(nativeEvent);
+                        }}>
+                        {offersView?.map((el, i) => (
+                          <View key={i}>{el}</View>
+                        ))}
+                      </ScrollView>
+                    )}
+                  </ScrollView>
+                  {isLoading && (
+                    <ActivityIndicator
+                      color={isDarkTheme ? Colors.white : Colors.black}
+                      style={{
+                        alignSelf: 'center',
+                        position: 'absolute',
+                        top: '50%',
+                        transform: [{translateY: -50}],
+                      }}
+                    />
+                  )}
+                </View>
+              </View>
+            </View>
+          </View>
         </AppLayout>
-    );
+      );
 
 };
 
@@ -336,17 +438,20 @@ const styles = StyleSheet.create({
 
     },
     amountInfo: {
+        marginBottom: 60
+    },
+    depositInfo: {
         flexDirection: 'row', 
         flex: 1, 
         justifyContent: 'center', 
-        marginBottom: 22
     },
     pointsInfo: {
         padding: 7,
         borderColor: Colors.white,
         borderWidth: 1,
         borderRadius: 5,
-        minWidth: 137
+        minWidth: 137,
+        minHeight: 52
     },
 accesAmount: {
     padding: 7,
@@ -354,8 +459,8 @@ accesAmount: {
     borderWidth: 1,
     borderRadius: 5,
     marginRight: 12,
-    minWidth: 137
-
+    minWidth: 137,
+    minHeight: 52
 },
 amountTitle: {
     fontFamily: 'HMpangram-Bold',
@@ -368,6 +473,28 @@ amountValue: {
     fontSize: 24,
     lineHeight: 29,
     textTransform: 'uppercase',
-}
+},
+accountNumberSection: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+    top: -5
+  },
+accountNumber: {
+    color: Colors.white,
+    fontFamily: 'HMpangram-Bold',
+    lineHeight: 17,
+    fontWeight: '900',
+    textTransform: 'uppercase',
+    fontSize: 13,
+    letterSpacing: 1
+  },
+  copyImage: {
+    width: 12,
+    height: 12
+  },
+  accountButton: {
+    marginBottom: 5
+  }
 
 });

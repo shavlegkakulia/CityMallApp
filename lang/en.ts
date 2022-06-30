@@ -142,7 +142,7 @@ export default {
         messageUsText :'Message in review, we will contact you shortly',
         cardNumber: 'Card Number',
         cardDate: 'Valid Thru',
-        describeText: 'Please enter card(s) design, quantity & amount(min 50 GEL - max 5000 GEL)',
+        describeText: 'Please insert quantity and the amount of the card (min. 50₾, max. 5000₾)',
         addressInfoText: 'Please enter address',
         selectGender: 'Please select gender',
         terms: 'Please agree to terms and conditions',
