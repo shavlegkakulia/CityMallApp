@@ -203,7 +203,7 @@ const ProfileScreen = (props: any) => {
         startFetching = false;
       })
       .catch(e => {
-        console.log('error ===>', e);
+        console.log('Get Personal Offers Error ===>', e.response.data);
       });
   };
 
@@ -466,7 +466,33 @@ const accountNumber = cinfo?.loyaltyAccountNumber;
             </TouchableOpacity>
           </View>
         </View>: null}
-
+        <View style={{marginBottom: 10}}>
+          <View style={styles.promotionContainer}>
+            <Text
+              style={[
+                styles.promotionsTitle,
+                {color: isDarkTheme ? Colors.white : Colors.black},
+              ]}>
+              {state?.t('screens.myOffers')}
+            </Text>
+            <PaginationDots
+              length={Math.round(personalOffers?.length / 2)}
+              step={offersStep}
+            />
+          </View>
+          <ScrollView
+            contentContainerStyle={{flexDirection: 'row'}}
+            pagingEnabled={true}
+            showsHorizontalScrollIndicator={false}
+            horizontal={true}
+            onScroll={({nativeEvent}) => {
+              onChangeSectionStep(nativeEvent);
+            }}>
+            {personalOffers?.map((el: any, i: number) => (
+              <PromotionBox key={i} data={el} />
+            ))}
+          </ScrollView>
+        </View>
         <View style={{marginBottom: 30, marginTop: 30}}>
           <View style={styles.promotionContainer}>
             <Text
@@ -492,33 +518,6 @@ const accountNumber = cinfo?.loyaltyAccountNumber;
             }}>
             {clientVouchers?.map((el: any, i: number) => (
               <VaucherPromptBox key={i} data={el} />
-            ))}
-          </ScrollView>
-        </View>
-        <View style={{marginBottom: 10}}>
-          <View style={styles.promotionContainer}>
-            <Text
-              style={[
-                styles.promotionsTitle,
-                {color: isDarkTheme ? Colors.white : Colors.black},
-              ]}>
-              {state?.t('screens.myOffers')}
-            </Text>
-            <PaginationDots
-              length={Math.round(personalOffers?.length / 2)}
-              step={offersStep}
-            />
-          </View>
-          <ScrollView
-            contentContainerStyle={{flexDirection: 'row'}}
-            pagingEnabled={true}
-            showsHorizontalScrollIndicator={false}
-            horizontal={true}
-            onScroll={({nativeEvent}) => {
-              onChangeSectionStep(nativeEvent);
-            }}>
-            {personalOffers?.map((el: any, i: number) => (
-              <PromotionBox key={i} data={el} />
             ))}
           </ScrollView>
         </View>
