@@ -269,7 +269,7 @@ const HomeScreen = () => {
                           copyToClipboard(state.clientInfo.loyaltyAccountNumber);
                         }}>
                         <Text style={[styles.accountNumber, {color: isDarkTheme ? Colors.white : Colors.black}]}>
-                          {state.clientInfo.loyaltyAccountNumber}{' 123123123123'}
+                          {state.clientInfo.loyaltyAccountNumber}{' '}
                           <Image
                             source={require('./../assets/images/textCopyIcon.png')}
                             style={styles.copyImage}
