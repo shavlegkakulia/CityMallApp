@@ -263,6 +263,9 @@ const HomeScreen = () => {
                 {(state.clientInfo.loyaltyAccountNumber !== undefined && state.clientInfo.loyaltyAccountNumber.length > 0) ? (
                   <View style={[styles.accountNumberSection, Platform.OS === 'ios' ? {marginTop: 15} : {}]}>
                     <View >
+                    <Text style={styles.accountTitle}>
+                    {state?.t('common.accountNumber')}
+                  </Text>
                       <TouchableOpacity
                         style={styles.accountButton}
                         onPress={() => {
@@ -478,7 +481,7 @@ accountNumberSection: {
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',
-    top: -5
+    top: -8
   },
 accountNumber: {
     color: Colors.white,
@@ -496,6 +499,14 @@ accountNumber: {
   },
   accountButton: {
     marginBottom: 5
+  },
+  accountTitle: {
+    color: Colors.white,
+    fontFamily: 'HMpangram-Bold',
+    fontSize: 14,
+    lineHeight: 18,
+    fontWeight: '900',
+    textTransform: 'uppercase',
+    marginBottom: 3
   }
-
 });
