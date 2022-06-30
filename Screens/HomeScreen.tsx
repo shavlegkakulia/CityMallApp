@@ -261,8 +261,8 @@ const HomeScreen = () => {
             {state.clientInfo !== undefined && (
               <View style={styles.amountInfo}>
                 {(state.clientInfo.loyaltyAccountNumber !== undefined && state.clientInfo.loyaltyAccountNumber.length > 0) ? (
-                  <View style={styles.accountNumberSection}>
-                    <View>
+                  <View style={[styles.accountNumberSection, Platform.OS === 'ios' ? {marginTop: 15} : {}]}>
+                    <View >
                       <TouchableOpacity
                         style={styles.accountButton}
                         onPress={() => {
@@ -487,7 +487,8 @@ accountNumber: {
     fontWeight: '900',
     textTransform: 'uppercase',
     fontSize: 13,
-    letterSpacing: 1
+    letterSpacing: 1,
+    textAlign: 'center',
   },
   copyImage: {
     width: 12,

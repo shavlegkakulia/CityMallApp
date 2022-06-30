@@ -30,9 +30,9 @@ const TemporaryText: React.FC<IProps> = props => {
   }, [props.show]);
 
   return (
-    <View style={styles.copiedTextBox}>
-      {visibiliti &&  <Text style={[styles.copiedText, {color: isDarkTheme ? Colors.white : Colors.black}]}>{props.text}</Text>}
-    </View>
+    visibiliti ?  <View style={styles.copiedTextBox}>
+      <Text style={[styles.copiedText, {color: isDarkTheme ? Colors.white : Colors.black}]}>{props.text}</Text>
+    </View> : null
   );
 };
 
