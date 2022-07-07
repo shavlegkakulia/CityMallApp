@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import {
   Keyboard,
   Image,
-  Pressable,
   StyleSheet,
   Text,
   TextInput,
@@ -10,24 +9,23 @@ import {
   View,
   BackHandler,
   Platform,
-  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { AppContext } from '../AppContext/AppContext';
 import { Colors } from '../Colors/Colors';
 import AppButton from '../Components/CustomComponents/AppButton';
-// import AppButton from '../Components/CustomComponents/AppButton';
 import AppCheckBox from '../Components/CustomComponents/AppCheckBox';
 import AppInput from '../Components/CustomComponents/AppInput';
 import Layout from '../Components/Layouts/Layout';
 import { useDimension } from '../Hooks/UseDimension';
 import ApiServices, {
   IServiceCenter,
-  IServiceCenterResponse,
 } from '../Services/ApiServices';
 import { GoBack, navigate } from '../Services/NavigationServices';
 import Grid from '../Styles/grid';
-import translateService from '../Services/translateService';
+import axios from 'axios';
+import envs from '../config/env';
 
 interface IDeliveryOption {
   fromCityMall: boolean;
@@ -63,18 +61,35 @@ const OrderGiftCardScreen = () => {
   const [nameError, setNameError] = useState<string>('');
   const [phoneError, setPhoneError] = useState('');
   const [isDeliveryInit, setIsDeliveryInit] = useState(false);
+  const [strings, setStrings] = useState<any>(undefined);
 
   useEffect(() => {
     hanldeGetServiceCenters();
   }, []);
 
-  // useEffect(() => {
-  //     if (phoneNumber.length === 12 || phoneNumber.length === 3) {
-  //         setPhoneNumberError('');
-  //     } else {
-  //         setPhoneNumberError('მობილურის ნომერი არასწორია')
-  //     }
-  // }, [phoneNumber]);
+
+  useEffect(() => {
+    setStrings(undefined)
+    axios.get(`${envs.API_URL}/api/Mobile/GetGeneralTxt`).then(res => {
+      if (res.data) {
+        setStrings(res.data);
+
+      }
+    });
+  }, [state.lang]);
+
+  let orderGiftCardText: any = {};
+
+  try {
+    if (strings?.length) {
+      const index = strings.findIndex((s: any) => s.type == 5);
+      if (index >= 0) {
+        orderGiftCardText = strings[index];
+      }
+    }
+  } catch (_) { }
+
+
 
   useEffect(() => {
     if (errorMessages.length === 0) {
@@ -218,51 +233,7 @@ const OrderGiftCardScreen = () => {
     setPhoneNumber(value);
   };
 
-  // const handleValidateInputs = (name: string, value: string) => {
-  //   if(customer?.length <= 0) {
-  //     setNameError(state?.t('infoText.validate'));
 
-  //   } else {
-  //     setNameError('');
-  //   }
-  //   if(phoneNumber.length <= 0) {
-  //     setPhoneError(state?.t('infoText.validate'));
-
-  //   } else {
-  //     setPhoneError('');
-  //   }
-  //   switch (value) {
-  //     case 'customer':
-  //       if (name === 'add') {
-  //         setCustomerError(state?.t('infoText.validate'));
-  //       } else {
-  //         if (customerError) {
-  //           setCustomerError('');
-  //         }
-  //       }
-  //       break;
-  //     case 'orderDetails':
-  //       if (name === 'add') {
-  //         setOrderDetailsError(state?.t('infoText.validate'));
-  //       } else {
-  //         if (orderDetailsError) {
-  //           setOrderDetailsError('');
-  //         }
-  //       }
-  //       break;
-  //     case 'address':
-  //       if (name === 'add') {
-  //         setAddressError(state?.t('infoText.validate'));
-  //       } else {
-  //         if (addressError) {
-  //           setAddressError('');
-  //         }
-  //       }
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // };
 
   const toggleDeliveryOption = (option: string) => {
     if (option === 'fromMall') {
@@ -417,7 +388,7 @@ const OrderGiftCardScreen = () => {
       orderDetails: orderDetails || '',
       deliveryType: deliveryOption.fromCityMall ? 1 : 2,
     };
-    if(email !== '') {
+    if (email !== '') {
       data = {
         ...data,
         email: email
@@ -486,9 +457,15 @@ const OrderGiftCardScreen = () => {
           <View>
             <GiftCards />
             <View style={{ marginTop: 44 }}>
-              <Text style={styles.infoText}>
-                {state?.t('infoText.loialtyText')}{' '}
-              </Text>
+              {
+                strings == undefined ?
+                  <ActivityIndicator animating={true} color={isDarkTheme ? Colors.white : Colors.black} />
+                  :
+                  <Text style={styles.infoText}>
+
+                    {orderGiftCardText.text}{' '}
+                  </Text>
+              }
             </View>
           </View>
           <View

@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -12,8 +12,8 @@ import {
   NativeSyntheticEvent,
   Linking,
 } from 'react-native';
-import {AppContext} from '../../AppContext/AppContext';
-import {Colors} from '../../Colors/Colors';
+import { AppContext } from '../../AppContext/AppContext';
+import { Colors } from '../../Colors/Colors';
 import AppLayout from '../../Components/AppLayout';
 import AppSwitch from '../../Components/CustomComponents/AppSwitch';
 import PaginationDots from '../../Components/PaginationDots';
@@ -25,10 +25,10 @@ import ApiServices, {
   IClientPaymentTransaction,
   IClientTransaction,
 } from '../../Services/ApiServices';
-import {navigate} from '../../Services/NavigationServices';
-import {formatNumber} from '../../Services/Utils';
-import {GetOffers, IOffer} from '../../Services/Api/OffersApi';
-import {GetVouchersToBuy, IVouchers} from '../../Services/Api/VouchersApi';
+import { navigate } from '../../Services/NavigationServices';
+import { formatNumber } from '../../Services/Utils';
+import { GetOffers, IOffer } from '../../Services/Api/OffersApi';
+import { GetVouchersToBuy, IVouchers } from '../../Services/Api/VouchersApi';
 import VaucherPromptBox from '../../Components/VaucherPromptBox';
 import translateService from '../../Services/translateService';
 import { subscriptionService } from '../../Services/SubscriptionServive';
@@ -42,8 +42,8 @@ export enum tranTypes {
 }
 
 const ProfileScreen = (props: any) => {
-  const {state, setGlobalState} = useContext(AppContext);
-  const {isDarkTheme, offersArray} = state;
+  const { state, setGlobalState } = useContext(AppContext);
+  const { isDarkTheme, offersArray } = state;
 
   let isEndFetching = false;
   let startFetching = false;
@@ -100,13 +100,11 @@ const ProfileScreen = (props: any) => {
     setIsMoneyTransaction(status);
   };
 
-  const [cinfo, setcinfo] = useState<IClientInfo | undefined>();
 
   const getClientData = () => {
     ApiServices.GetClientInfo()
-      .then(res => { console.log(res.data)
-        setGlobalState({clientInfo: res.data});
-        setcinfo(res.data);
+      .then(res => {
+        setGlobalState({ clientInfo: res.data });
       })
       .catch(e => {
         console.log(e);
@@ -124,7 +122,7 @@ const ProfileScreen = (props: any) => {
       rowCount,
       isDarkTheme ? 'dark' : 'light',
     )
-      .then(res => {console.log('>>>', res.data.data)
+      .then(res => {
         if (renew) {
           setClientPaymentTransactions(res.data.data!);
         } else {
@@ -179,7 +177,7 @@ const ProfileScreen = (props: any) => {
       })
       .catch(e => {
         setCanOperation(true);
-       // setFetchingMore(false);
+        // setFetchingMore(false);
       });
   };
 
@@ -203,7 +201,7 @@ const ProfileScreen = (props: any) => {
         startFetching = false;
       })
       .catch(e => {
-        console.log('Get Personal Offers Error ===>', e.response.data);
+        console.log(e.response.data);
       });
   };
 
@@ -288,7 +286,7 @@ const ProfileScreen = (props: any) => {
     const paddingToBottom = 5;
     const isChunk =
       event.nativeEvent.layoutMeasurement.height +
-        event.nativeEvent.contentOffset.y >=
+      event.nativeEvent.contentOffset.y >=
       event.nativeEvent.contentSize.height - paddingToBottom;
 
     if (isChunk && !fetchingMore && canOperation) {
@@ -314,7 +312,7 @@ const ProfileScreen = (props: any) => {
       <View
         style={[
           styles.bottomLoading,
-          {backgroundColor: isDarkTheme ? Colors.black : Colors.white},
+          { backgroundColor: isDarkTheme ? Colors.black : Colors.white },
         ]}>
         <ActivityIndicator
           size="small"
@@ -323,26 +321,26 @@ const ProfileScreen = (props: any) => {
       </View>
     ) : null;
 
-useEffect(() => {
-  const subscription = subscriptionService?.getData()?.subscribe(data => {
-    if (data?.key === 'theme_changed') {
-      if (!renewing) {
-        if (isMoneyTransaction) {
-          getClientPayTransactions();
-        } else {
-          getClientTransactions();
+  useEffect(() => {
+    const subscription = subscriptionService?.getData()?.subscribe(data => {
+      if (data?.key === 'theme_changed') {
+        if (!renewing) {
+          if (isMoneyTransaction) {
+            getClientPayTransactions();
+          } else {
+            getClientTransactions();
+          }
         }
       }
-    }
-  });
+    });
 
-  return () => {
-    subscriptionService?.clearData();
-    subscription?.unsubscribe();
-  };
-}, []);
+    return () => {
+      subscriptionService?.clearData();
+      subscription?.unsubscribe();
+    };
+  }, []);
 
-const accountNumber = cinfo?.loyaltyAccountNumber;
+  const accountNumber = state.clientInfo?.loyaltyAccountNumber;
 
   return (
     <AppLayout pageTitle={state?.t('screens.room')}>
@@ -369,7 +367,7 @@ const accountNumber = cinfo?.loyaltyAccountNumber;
             <Text
               style={[
                 styles.balanceWrapAmount,
-                isDarkTheme ? {color: Colors.white} : {color: Colors.black},
+                isDarkTheme ? { color: Colors.white } : { color: Colors.black },
               ]}>
               {formatNumber(state.clientInfo.ballance) || 0}₾
             </Text>
@@ -378,38 +376,38 @@ const accountNumber = cinfo?.loyaltyAccountNumber;
             <Text style={styles.balanceWrapTitle}>
               {state?.t('screens.cityPoint')}
             </Text>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text
                 style={[
                   styles.balanceWrapAmount,
-                  isDarkTheme ? {color: Colors.white} : {color: Colors.black},
+                  isDarkTheme ? { color: Colors.white } : { color: Colors.black },
                 ]}>
                 {formatNumber(state.clientInfo.points) || 0}
               </Text>
               <Image
                 source={require('./../../assets/images/Star.png')}
-                style={{width: 9, height: 9, marginLeft: 3}}
+                style={{ width: 9, height: 9, marginLeft: 3 }}
                 resizeMode={'contain'}
               />
             </View>
           </View>
         </View>
-        <View style={{marginBottom: 30, width: '100%'}}>
+        <View style={{ marginBottom: 30, width: '100%' }}>
           <View style={styles.statusBarView}>
             <Text
               style={[
                 styles.promotionsTitle,
-                {color: isDarkTheme ? Colors.white : Colors.black},
+                { color: isDarkTheme ? Colors.white : Colors.black },
               ]}>
               {state?.t('screens.statusbar')}
             </Text>
             <TouchableOpacity
               onPress={() => navigate('StatusInfoScreen')}
-              style={{flexDirection: 'row', alignItems: 'center'}}>
+              style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text
                 style={[
                   styles.promotionsTitle,
-                  {color: isDarkTheme ? Colors.white : Colors.black},
+                  { color: isDarkTheme ? Colors.white : Colors.black },
                 ]}>
                 {state?.t('common.seeMore')}
               </Text>
@@ -419,9 +417,9 @@ const accountNumber = cinfo?.loyaltyAccountNumber;
               />
             </TouchableOpacity>
           </View>
-          {cinfo ? <StatusBar data={cinfo} /> : null}
+          {state.clientInfo ? <StatusBar data={state.clientInfo} /> : null}
         </View>
-        <View style={{marginBottom: 20, alignItems: 'center'}}>
+        <View style={{ marginBottom: 20, alignItems: 'center' }}>
           <TouchableOpacity
             onPress={() => navigate('VouchersInfo')}
             style={{
@@ -435,7 +433,7 @@ const accountNumber = cinfo?.loyaltyAccountNumber;
             }}>
             <Image
               source={require('../../assets/images/vaucher.png')}
-              style={{width: 22, height: 16, marginRight: 10}}
+              style={{ width: 22, height: 16, marginRight: 10 }}
             />
             <Text style={styles.promotionsTitle}>
               {state?.t('screens.myVouchers')}
@@ -448,11 +446,11 @@ const accountNumber = cinfo?.loyaltyAccountNumber;
               {state?.t('common.accountNumber')}
             </Text>
             <TouchableOpacity
-            style={styles.accountButton}
+              style={styles.accountButton}
               onPress={() => {
                 copyToClipboard(accountNumber);
               }}>
-              <Text style={[styles.accountNumber, {color: isDarkTheme ? Colors.white : Colors.black}]}>
+              <Text style={[styles.accountNumber, { color: isDarkTheme ? Colors.white : Colors.black }]}>
                 {accountNumber}{' '}
                 <Image
                   source={require('./../../assets/images/textCopyIcon.png')}
@@ -465,13 +463,13 @@ const accountNumber = cinfo?.loyaltyAccountNumber;
               </Text>
             </TouchableOpacity>
           </View>
-        </View>: null}
-        <View style={{marginBottom: 10}}>
+        </View> : null}
+        <View style={{ marginBottom: 10 }}>
           <View style={styles.promotionContainer}>
             <Text
               style={[
                 styles.promotionsTitle,
-                {color: isDarkTheme ? Colors.white : Colors.black},
+                { color: isDarkTheme ? Colors.white : Colors.black },
               ]}>
               {state?.t('screens.myOffers')}
             </Text>
@@ -481,11 +479,11 @@ const accountNumber = cinfo?.loyaltyAccountNumber;
             />
           </View>
           <ScrollView
-            contentContainerStyle={{flexDirection: 'row'}}
+            contentContainerStyle={{ flexDirection: 'row' }}
             pagingEnabled={true}
             showsHorizontalScrollIndicator={false}
             horizontal={true}
-            onScroll={({nativeEvent}) => {
+            onScroll={({ nativeEvent }) => {
               onChangeSectionStep(nativeEvent);
             }}>
             {personalOffers?.map((el: any, i: number) => (
@@ -493,12 +491,12 @@ const accountNumber = cinfo?.loyaltyAccountNumber;
             ))}
           </ScrollView>
         </View>
-        <View style={{marginBottom: 30, marginTop: 30}}>
+        <View style={{ marginBottom: 30, marginTop: 30 }}>
           <View style={styles.promotionContainer}>
             <Text
               style={[
                 styles.promotionsTitle,
-                {color: isDarkTheme ? Colors.white : Colors.black},
+                { color: isDarkTheme ? Colors.white : Colors.black },
               ]}>
               {state?.t('screens.pointsOption')}
             </Text>
@@ -509,11 +507,11 @@ const accountNumber = cinfo?.loyaltyAccountNumber;
           </View>
 
           <ScrollView
-            contentContainerStyle={{flexDirection: 'row'}}
+            contentContainerStyle={{ flexDirection: 'row' }}
             pagingEnabled={true}
             showsHorizontalScrollIndicator={false}
             horizontal={true}
-            onScroll={({nativeEvent}) => {
+            onScroll={({ nativeEvent }) => {
               onChangeSectionStepV(nativeEvent);
             }}>
             {clientVouchers?.map((el: any, i: number) => (
@@ -546,7 +544,7 @@ const accountNumber = cinfo?.loyaltyAccountNumber;
             <Text
               style={[
                 styles.promotionsTitle,
-                {color: isDarkTheme ? Colors.white : Colors.black},
+                { color: isDarkTheme ? Colors.white : Colors.black },
               ]}>
               {state?.t('screens.transactions')}
             </Text>
@@ -557,12 +555,12 @@ const accountNumber = cinfo?.loyaltyAccountNumber;
                     ? require('../../assets/images/points_active.png')
                     : require('../../assets/images/points_inactive.png')
                 }
-                style={{width: 19, height: 19}}
+                style={{ width: 19, height: 19 }}
               />
 
               <AppSwitch
                 onPress={toggleSwitch}
-                pressable={cinfo?.hasPayCard === true}
+                pressable={state.clientInfo?.hasPayCard === true}
               />
               <Image
                 source={
@@ -570,7 +568,7 @@ const accountNumber = cinfo?.loyaltyAccountNumber;
                     ? require('../../assets/images/GEL_active.png')
                     : require('../../assets/images/GEL_inactive.png')
                 }
-                style={{width: 15, height: 18}}
+                style={{ width: 15, height: 18 }}
               />
             </View>
           </View>
@@ -705,8 +703,8 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   accountNumberSection: {
-    marginTop: 30, 
-    marginBottom: 40, 
+    marginTop: 30,
+    marginBottom: 40,
     flexDirection: 'row'
   },
   accountTitle: {

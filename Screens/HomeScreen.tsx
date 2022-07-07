@@ -172,32 +172,7 @@ const HomeScreen = () => {
           });
       };
 
-      useEffect(() => {
-        if(infoUpdate.current) clearInterval(infoUpdate.current);
-        AsyncStorage.getItem('skip_token').then(res => { 
-            if(res === null) {
-                infoUpdate.current = setInterval(() => {
-                    ApiServices.GetClientInfo()
-                    .then(res => {
-                        const info = {...res.data};
-                        const prevInfo = {...state.clientInfo};
-                        prevInfo.points = info.points;
-                        prevInfo.ballance = info.ballance;
-                        setGlobalState({clientInfo: {...prevInfo}});
-                    })
-                    .catch(e => {
-                      console.log(e);
-                    });
-                }, 20000);
-            } else {
-                setIsSkip(true);
-            }
-        })
 
-        return () => {
-            if(infoUpdate.current) clearInterval(infoUpdate.current);
-        }
-      }, [])
 
       useEffect(() => {
         AsyncStorage.getItem('skip_token').then(res => { 
@@ -231,6 +206,8 @@ const HomeScreen = () => {
         };
       }, []);
 
+
+
       return (
         <AppLayout pageTitle={state?.t('screens.home')}>
           <View
@@ -261,9 +238,9 @@ const HomeScreen = () => {
             {state.clientInfo !== undefined && (
               <View style={styles.amountInfo}>
                 {(state.clientInfo.loyaltyAccountNumber !== undefined && state.clientInfo.loyaltyAccountNumber.length > 0) ? (
-                  <View style={[styles.accountNumberSection, Platform.OS === 'ios' ? {marginTop: 15} : {}]}>
+                  <View style={styles.accountNumberSection}>
                     <View >
-                    <Text style={styles.accountTitle}>
+                    <Text style={[styles.accountTitle, {color: isDarkTheme? Colors.white : Colors.black}]}>
                     {state?.t('common.accountNumber')}
                   </Text>
                       <TouchableOpacity
@@ -481,7 +458,8 @@ accountNumberSection: {
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',
-    top: -8
+    top: -8,
+    marginTop: 15
   },
 accountNumber: {
     color: Colors.white,
@@ -507,6 +485,7 @@ accountNumber: {
     lineHeight: 18,
     fontWeight: '900',
     textTransform: 'uppercase',
+    textAlign: 'center',
     marginBottom: 3
   }
 });

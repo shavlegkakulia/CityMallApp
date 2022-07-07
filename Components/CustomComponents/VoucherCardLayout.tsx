@@ -152,7 +152,7 @@ const VoucherCardLayout: React.FC<IIAppBtnProps> = props => {
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Image source={{ uri: el?.logo }} style={{ width: 60, height: 43 }} />
               <Text style={[styles.nameAddressTextStyle, { color: isDarkTheme ? Colors.white : Colors.black }]}>
-                -  {el?.merchantName} | {el?.address === 1 ? state?.t('screens.cityMallSaburtalo') : state?.t('screens.cityMallGldani')}
+                -  {el?.merchantName} | {el?.address == 1 ? state?.t('screens.cityMallSaburtalo') : state?.t('screens.cityMallGldani')}
               </Text>
             </View>
           </View>
