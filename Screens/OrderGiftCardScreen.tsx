@@ -468,8 +468,7 @@ const OrderGiftCardScreen = () => {
               }
             </View>
           </View>
-          <View
-            style={{ alignItems: 'flex-end', marginTop: 30, marginBottom: 20 }}>
+          <View style={{ alignItems: 'flex-end', marginTop: 30, marginBottom: 80 }}>
             <AppButton
               btnStyle={styles.btnStyle}
               titleStyle={styles.btnTitleStyle}

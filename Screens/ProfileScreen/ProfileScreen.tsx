@@ -440,30 +440,32 @@ const ProfileScreen = (props: any) => {
             </Text>
           </TouchableOpacity>
         </View>
-        {(accountNumber !== undefined && accountNumber.length > 0) ? <View style={styles.accountNumberSection}>
-          <View>
-            <Text style={styles.accountTitle}>
-              {state?.t('common.accountNumber')}
-            </Text>
-            <TouchableOpacity
-              style={styles.accountButton}
-              onPress={() => {
-                copyToClipboard(accountNumber);
-              }}>
-              <Text style={[styles.accountNumber, { color: isDarkTheme ? Colors.white : Colors.black }]}>
-                {accountNumber}{' '}
-                <Image
-                  source={require('./../../assets/images/textCopyIcon.png')}
-                  style={styles.copyImage}
-                />
-                <TemporaryText
-                  text={state?.t('common.copied')}
-                  show={accountNumber === copiedText}
-                />
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View> : null}
+        {
+          (accountNumber !== undefined && accountNumber.length > 0) ?
+            <View style={styles.accountNumberSection}>
+              <View>
+                <Text style={[styles.accountTitle, { color: isDarkTheme ? Colors.white : Colors.black }]}>
+                  {state?.t('common.accountNumber')}
+                </Text>
+                <TouchableOpacity
+                  style={styles.accountButton}
+                  onPress={() => {
+                    copyToClipboard(accountNumber);
+                  }}>
+                  <Text style={[styles.accountNumber, { color: isDarkTheme ? Colors.white : Colors.black }]}>
+                    {accountNumber}{' '}
+                    <Image
+                      source={require('./../../assets/images/textCopyIcon.png')}
+                      style={styles.copyImage}
+                    />
+                    <TemporaryText
+                      text={state?.t('common.copied')}
+                      show={accountNumber === copiedText}
+                    />
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View> : null}
         <View style={{ marginBottom: 10 }}>
           <View style={styles.promotionContainer}>
             <Text
