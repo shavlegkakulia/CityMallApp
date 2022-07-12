@@ -49,9 +49,9 @@ const SelectedVouchers = () => {
 
   return (
     <Layout hasBackArrow
-    
-    pageName= {state?.t('screens.buyVoucher')}
-    onPressBack={GoBack}>
+
+      pageName={state?.t('screens.buyVoucher')}
+      onPressBack={GoBack}>
       <View
         style={{
           flexGrow: 1,
@@ -61,43 +61,28 @@ const SelectedVouchers = () => {
         <View style={styles.cardWrapper}>
           <View>
             <View>
-              {Data.length > 0 && <VoucherCardLayout
-                item={route?.params?.data}
-              />}
+              {Data.length > 0 &&
+                <VoucherCardLayout
+                  item={route?.params?.data}
+                />}
             </View>
 
-            <View
-              style={{
-                flexDirection: 'row',
-                paddingVertical: 7,
-                paddingBottom: 26,
-              }}>
-              <Text style={[{fontFamily: 'HMpangram-Bold'},{color: isDarkTheme ? Colors.white : Colors.black}]}>
-              {state?.t('common.price')}: {route.params?.data?.voucherPurchasePoints}{' '}
-              </Text>
-
-              <Image source={require('../../assets/images/Star.png')} />
-            </View>
-            {/* <View style={{height: 100}}>
-              <Text style={{color: Colors.white, fontFamily: 'HM pangram'}}>
-                ვერიფიკაციისთვის საჭირო სმს გამოგზავნილია
-              </Text>
-            </View> */}
+            
           </View>
         </View>
 
       </View>
-      <View style={{alignItems: 'center', height: 100}}>
-      {error !== undefined ?
-                <Text style={[styles.errorText,{color: isDarkTheme ? Colors.white : Colors.black}]}>{error}</Text>
-                : null}
-          <TouchableOpacity
-            style={styles.btnStyle}
-            onPress={() => buy()}>
-            <Text style={styles.btnText}>{state?.t('common.accept')}</Text>
-          </TouchableOpacity>
-        </View>
-        <Modal visible={isLoading} animationType="slide" transparent={true}>
+      <View style={{ alignItems: 'center', height: 100 }}>
+        {error !== undefined ?
+          <Text style={[styles.errorText, { color: isDarkTheme ? Colors.white : Colors.black }]}>{error}</Text>
+          : null}
+        <TouchableOpacity
+          style={styles.btnStyle}
+          onPress={() => buy()}>
+          <Text style={styles.btnText}>{state?.t('common.accept')}</Text>
+        </TouchableOpacity>
+      </View>
+      <Modal visible={isLoading} animationType="slide" transparent={true}>
         <ActivityIndicator
           size={'small'}
           color={'#ffffff'}

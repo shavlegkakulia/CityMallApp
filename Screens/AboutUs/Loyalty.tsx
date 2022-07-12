@@ -1,33 +1,33 @@
-import React, {useContext} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
-import {AppContext} from '../../AppContext/AppContext';
-import {Colors} from '../../Colors/Colors';
-import {useDimension} from '../../Hooks/UseDimension';
-import {GoBack, navigate} from '../../Services/NavigationServices';
+import React, { useContext, useState } from 'react';
+import { Image, StyleSheet, Text, View, ActivityIndicator } from 'react-native';
+import { AppContext } from '../../AppContext/AppContext';
+import { Colors } from '../../Colors/Colors';
+import { useDimension } from '../../Hooks/UseDimension';
+import { GoBack, navigate } from '../../Services/NavigationServices';
 import Layout from '../../Components/Layouts/Layout';
 import AppButton from '../../Components/CustomComponents/AppButton';
 import translateService from '../../Services/translateService';
 
-const Loyalty = ({strings, userPhoneNumber, skip}: {strings: any[], userPhoneNumber?: string, skip?: boolean}) => {
-  const {width} = useDimension();
-  const {state} = useContext(AppContext);
-  const {isDarkTheme, clientDetails} = state;
+const Loyalty = ({ strings, userPhoneNumber, skip, pageLoading }: { strings: any[], userPhoneNumber?: string, skip?: boolean, pageLoading: boolean }) => {
+  const { width } = useDimension();
+  const { state } = useContext(AppContext);
+  const { isDarkTheme, clientDetails } = state;
 
-  let str = '';
+  let loyaltyText = '';
 
   try {
     if (strings?.length) {
       const index = strings?.findIndex((s: any) => s?.type == 1);
       if (index >= 0) {
-        str = strings[index].text;
+        loyaltyText = strings[index].text;
       }
     }
-  } catch (_) {}
+  } catch (_) { }
 
   return (
     <Layout hasBackArrow pageName={state?.t('screens.aboutLoialty')} onPressBack={GoBack}>
       <View style={styles.mainView}>
-        <View style={{alignItems: 'center'}}>
+        <View style={{ alignItems: 'center' }}>
           <View style={styles.imageView}>
             <Image
               style={styles.giftCardImg}
@@ -35,26 +35,27 @@ const Loyalty = ({strings, userPhoneNumber, skip}: {strings: any[], userPhoneNum
             />
           </View>
           <View>
-            <Text
-              style={[
-                styles.text,
-                {color: isDarkTheme ? Colors.white : Colors.black},
-              ]}>
-              {str}
-            </Text>
+            {
+              pageLoading ?
+                <ActivityIndicator animating={true} color={isDarkTheme ? Colors.white : Colors.black} />
+                :
+                <Text
+                  style={[
+                    styles.text,
+                    { color: isDarkTheme ? Colors.white : Colors.black },
+                  ]}>
+                  {loyaltyText}
+                </Text>
+            }
+
           </View>
-        </View>
-        <View >
-          <Text style={[styles.text,{color: isDarkTheme ? Colors.white : Colors.black}]}>
-          {state?.t('infoText.loialtyText')}
-          </Text>
         </View>
         {
           clientDetails?.length > 0 ?
             null
             :
             <View>
-              <AppButton onPress={() => navigate('REGSTEP_ONE', {userPhoneNumber, skip})} title={state?.t('common.register')} btnStyle={styles.authBtn} titleStyle={[styles.btnText, { color: Colors.white }]} />
+              <AppButton onPress={() => navigate('REGSTEP_ONE', { userPhoneNumber, skip })} title={state?.t('common.register')} btnStyle={styles.authBtn} titleStyle={[styles.btnText, { color: Colors.white }]} />
             </View>
         }
       </View>

@@ -239,7 +239,7 @@ const ProfileScreen = (props: any) => {
 
   useEffect(() => {
     getVouchersToBuy();
-  }, []);
+  }, [translateService.lang]);
 
   const getVouchersToBuy = () => {
     if (isLoading) return;

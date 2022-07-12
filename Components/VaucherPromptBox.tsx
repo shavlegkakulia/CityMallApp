@@ -18,17 +18,7 @@ const VaucherPromptBox: React.FC<any> = data => {
   const { state, setGlobalState } = useContext(AppContext);
   const { isDarkTheme } = state;
 
-  // const BoxColor = (i: number) => {
-  //     if (i % 4 === 1) {
-  //         return styles.promotionRed;
-  //     } else if (i % 4 === 2) {
-  //         return styles.promotionBlue;
-  //     } if (i % 4 === 3) {
-  //         return styles.promotionLightBlue;
-  //     } else {
-  //         return styles.promotionYellow;
-  //     }
-  // };
+
 
   const handlePromotionBoxClick = () => {
     navigate('SelectedVouchers', { data: data.data });
@@ -52,11 +42,6 @@ const VaucherPromptBox: React.FC<any> = data => {
       <View style={styles.promotionBox}>
 
         <Image style={styles.promotionImg} source={{ uri: data.data.imgUrl }} />
-        {/* <Image
-          style={styles.promotionImg}
-          source={require('./../assets/images/gift-card.png')}
-        /> */}
-
         <Text
           numberOfLines={2}
           style={[styles.promotionTitle,{ color: isDarkTheme ? Colors.white : Colors.black }]}>
@@ -64,17 +49,9 @@ const VaucherPromptBox: React.FC<any> = data => {
         </Text>
         <View
           style={{
-           // flexDirection: 'row',
             paddingVertical: 7,
             paddingBottom: 16,
           }}>
-          {/* <Text
-            style={[
-              { fontFamily: 'HMpangram-Bold' },
-              { color: isDarkTheme ? Colors.white : Colors.black },
-            ]}>
-            ფასი: {data?.data?.voucherPurchasePoints}{' '}
-          </Text> */}
           <View
             style={{
               flexDirection: 'row',

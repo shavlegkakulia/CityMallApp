@@ -21,7 +21,7 @@ const VouchersInfo = () => {
 
   useEffect(() => {
     getClientVouchers();
-  }, [])
+  }, [translateService.lang])
 
 
   const getClientVouchers = () => {

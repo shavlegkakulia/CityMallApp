@@ -4,11 +4,8 @@ import {AppContext} from '../../AppContext/AppContext';
 import {Colors} from '../../Colors/Colors';
 import {useDimension} from '../../Hooks/UseDimension';
 import {navigate} from '../../Services/NavigationServices';
-import AppLayout from '../AppLayout';
 import MessagesInfo from '../CustomComponents/MessagesInfo';
-import VoucherCardLayout from '../CustomComponents/VoucherCardLayout';
 import Layout from '../Layouts/Layout';
-import translateService from '../../Services/translateService';
 
 const VouchersDone = () => {
   const {width} = useDimension();

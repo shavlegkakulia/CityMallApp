@@ -218,7 +218,6 @@ const CheckGiftCardBalanceScreen = () => {
     };
     ApiServices.GetGiftBallance(data)
       .then(res => {
-        console.log(res)
         if (res.status === 200) {
           setbalance(res.data.ballance);
         }

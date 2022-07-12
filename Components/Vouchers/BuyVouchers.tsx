@@ -20,7 +20,7 @@ const BuyVouchers = () => {
 
   useEffect(() => {
     getVouchersToBuy();
-  }, [])
+  }, [translateService.lang])
 
 
   const getVouchersToBuy = () => {
