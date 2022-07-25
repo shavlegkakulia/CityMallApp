@@ -75,19 +75,21 @@ const Layout: React.FC<ILayoutProp> = (props) => {
         }).start();
     }, []);
 
-    useEffect(() => {
-        const showListener = Keyboard.addListener('keyboardDidShow', () => {
-            setKeyBoardShown(true);
-        });
-        const hideListener = Keyboard.addListener('keyboardDidHide', () => {
-            setKeyBoardShown(false);
-        });
+    // useEffect(() => {
+    //     const hideListener = Keyboard.addListener('keyboardDidHide', () => {
+    //         console.log('keyboard hide')
+    //         setKeyBoardShown(false);
+    //     });
 
-        return () => {
-            showListener.remove();
-            hideListener.remove();
-        }
-    }, []);
+    //     const showListener = Keyboard.addListener('keyboardDidShow', () => {
+    //         setKeyBoardShown(true);
+    //     });
+       
+    //     return () => {
+    //         showListener.remove();
+    //         // hideListener.remove();
+    //     }
+    // }, []);
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: isDarkTheme ? Colors.black : Colors.white }}>

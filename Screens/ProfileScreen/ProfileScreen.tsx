@@ -34,6 +34,7 @@ import translateService from '../../Services/translateService';
 import { subscriptionService } from '../../Services/SubscriptionServive';
 import Clipboard from '@react-native-community/clipboard';
 import TemporaryText from '../../Components/TemporaryText';
+import TopUpCityCard from '../../Components/TopUpCityCard';
 
 //transactionType
 export enum tranTypes {
@@ -442,30 +443,36 @@ const ProfileScreen = (props: any) => {
         </View>
         {
           (accountNumber !== undefined && accountNumber.length > 0) ?
-            <View style={styles.accountNumberSection}>
-              <View>
-                <Text style={[styles.accountTitle, { color: isDarkTheme ? Colors.white : Colors.black }]}>
-                  {state?.t('common.accountNumber')}
-                </Text>
-                <TouchableOpacity
-                  style={styles.accountButton}
-                  onPress={() => {
-                    copyToClipboard(accountNumber);
-                  }}>
-                  <Text style={[styles.accountNumber, { color: isDarkTheme ? Colors.white : Colors.black }]}>
-                    {accountNumber}{' '}
-                    <Image
-                      source={require('./../../assets/images/textCopyIcon.png')}
-                      style={styles.copyImage}
-                    />
-                    <TemporaryText
-                      text={state?.t('common.copied')}
-                      show={accountNumber === copiedText}
-                    />
+            <>
+              <View style={styles.accountNumberSection}>
+                <View>
+                  <Text style={[styles.accountTitle, { color: isDarkTheme ? Colors.white : Colors.black }]}>
+                    {state?.t('common.accountNumber')}
                   </Text>
-                </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.accountButton}
+                    onPress={() => {
+                      copyToClipboard(accountNumber);
+                    }}>
+                    <Text style={[styles.accountNumber, { color: isDarkTheme ? Colors.white : Colors.black }]}>
+                      {accountNumber}{' '}
+                      <Image
+                        source={require('./../../assets/images/textCopyIcon.png')}
+                        style={styles.copyImage}
+                      />
+                      <TemporaryText
+                        text={state?.t('common.copied')}
+                        show={accountNumber === copiedText}
+                      />
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View> : null}
+              <TopUpCityCard accountNumber={accountNumber}/>
+            </>
+            :
+            null
+        }
         <View style={{ marginBottom: 10 }}>
           <View style={styles.promotionContainer}>
             <Text

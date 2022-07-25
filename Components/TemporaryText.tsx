@@ -7,10 +7,11 @@ interface IProps {
   text: string;
   ttl?: number;
   show: boolean;
+  textPosition?: any
 }
 
 const TemporaryText: React.FC<IProps> = props => {
-  const [visibiliti, setVisibility] = useState<boolean>(false);
+  const [visibility, setVisibility] = useState<boolean>(false);
   const visibleTtlRef = useRef<NodeJS.Timeout>();
   const {state} = useContext(AppContext);
   const {isDarkTheme} = state;
@@ -30,8 +31,8 @@ const TemporaryText: React.FC<IProps> = props => {
   }, [props.show]);
 
   return (
-    visibiliti ?  <View style={styles.copiedTextBox}>
-      <Text style={[styles.copiedText, {color: isDarkTheme ? Colors.white : Colors.black}]}>{props.text}</Text>
+    visibility ?  <View style={styles.copiedTextBox}>
+      <Text style={[styles.copiedText, {color: isDarkTheme ? Colors.white : Colors.black, textAlign: props.textPosition !== undefined? props.textPosition : ''}, ]}>{props.text}</Text>
     </View> : null
   );
 };
